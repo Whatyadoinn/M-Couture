@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "../lib/firebase";
 import { getProductsByCollection, collectionsMeta } from "../data/products";
 import PageBanner from "../components/PageBanner";
 import CollectionCard from "../components/CollectionCard"; // We will modify this to support product mapping too or create a ProductCard. 
@@ -55,15 +53,8 @@ export default function CollectionDetailPage() {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        // Try Firestore first
-        const q = query(collection(db, "products"), where("collection", "==", slug));
-        const snap = await getDocs(q);
-        if (!snap.empty) {
-          setProducts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-        } else {
-          // Fallback to local
-          setProducts(getProductsByCollection(slug));
-        }
+        // Fallback to local
+        setProducts(getProductsByCollection(slug));
       } catch (err) {
         console.error(err);
         setProducts(getProductsByCollection(slug));

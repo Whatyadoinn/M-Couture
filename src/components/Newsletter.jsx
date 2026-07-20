@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import Reveal from "./Reveal";
-import { collection, addDoc, serverTimestamp, query, where, getDocs } from "firebase/firestore";
-import { db } from "../lib/firebase";
 import { sanitize, isValidEmail, rateLimit } from "../lib/security";
 import toast from "react-hot-toast";
 
@@ -30,21 +28,8 @@ export default function Newsletter() {
 
     setLoading(true);
     try {
-      // Check if email already exists
-      const q = query(collection(db, "newsletter"), where("email", "==", cleanEmail));
-      const snap = await getDocs(q);
-      
-      if (!snap.empty) {
-        toast("You are already on the list!", { icon: "👋" });
-        setEmail("");
-        setLoading(false);
-        return;
-      }
-
-      await addDoc(collection(db, "newsletter"), {
-        email: cleanEmail,
-        subscribedAt: serverTimestamp(),
-      });
+      // Mock network delay
+      await new Promise(resolve => setTimeout(resolve, 800));
       
       toast.success("You're on the list — welcome to M'Couture.");
       setEmail("");

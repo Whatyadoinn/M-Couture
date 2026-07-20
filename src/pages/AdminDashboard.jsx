@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { collection, query, getDocs, addDoc, updateDoc, doc, deleteDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../lib/firebase";
 import { uploadImage } from "../lib/imageUpload";
+import { products as localProducts } from "../data/products";
 import toast from "react-hot-toast";
 import { Package, Plus, Image as ImageIcon, CheckCircle, Clock } from "lucide-react";
 
@@ -28,11 +27,9 @@ export default function AdminDashboard() {
     setLoading(true);
     try {
       if (activeTab === "products") {
-        const snap = await getDocs(collection(db, "products"));
-        setProducts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setProducts(localProducts);
       } else if (activeTab === "orders") {
-        const snap = await getDocs(collection(db, "orders"));
-        setOrders(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setOrders([]); // Mock orders
       }
     } catch (err) {
       console.error(err);
@@ -61,42 +58,13 @@ export default function AdminDashboard() {
 
   const saveProduct = async (e) => {
     e.preventDefault();
-    try {
-      const productData = {
-        title: form.title,
-        description: form.description,
-        price: Number(form.price),
-        collection: form.collection,
-        sku: form.sku,
-        image: form.image,
-        updatedAt: serverTimestamp()
-      };
-
-      if (currentProduct) {
-        await updateDoc(doc(db, "products", currentProduct.id), productData);
-        toast.success("Product updated");
-      } else {
-        productData.createdAt = serverTimestamp();
-        await addDoc(collection(db, "products"), productData);
-        toast.success("Product created");
-      }
-      setIsEditing(false);
-      setCurrentProduct(null);
-      fetchData();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to save product");
-    }
+    toast.error("Backend disabled - cannot save product.");
+    setIsEditing(false);
+    setCurrentProduct(null);
   };
 
   const updateOrderStatus = async (orderId, status) => {
-    try {
-      await updateDoc(doc(db, "orders", orderId), { status });
-      toast.success("Order status updated");
-      fetchData();
-    } catch (err) {
-      toast.error("Failed to update status");
-    }
+    toast.error("Backend disabled - cannot update order.");
   };
 
   return (
@@ -219,7 +187,7 @@ export default function AdminDashboard() {
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{p.collection}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                               <button onClick={() => { setForm(p); setCurrentProduct(p); setIsEditing(true); }} className="text-gold-dark hover:text-charcoal mr-4">Edit</button>
-                              <button onClick={async () => { if(confirm('Delete?')) { await deleteDoc(doc(db,"products",p.id)); fetchData(); } }} className="text-red-600 hover:text-red-900">Delete</button>
+                              <button onClick={async () => { if(confirm('Delete?')) { toast.error("Backend disabled"); } }} className="text-red-600 hover:text-red-900">Delete</button>
                             </td>
                           </tr>
                         ))}

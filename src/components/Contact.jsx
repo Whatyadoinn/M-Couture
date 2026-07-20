@@ -3,8 +3,6 @@ import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, MessageCircle } from "lucide-react";
 import { InstagramIcon } from "./SocialIcons";
 import Reveal from "./Reveal";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../lib/firebase";
 import { sanitizeForm, isValidEmail, rateLimit } from "../lib/security";
 import toast from "react-hot-toast";
 
@@ -66,10 +64,8 @@ export default function Contact() {
 
     setStatus("sending");
     try {
-      await addDoc(collection(db, "contactMessages"), {
-        ...cleanForm,
-        createdAt: serverTimestamp(),
-      });
+      // Mock network delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
       setStatus("sent");
       setForm({ name: "", email: "", message: "" });
       toast.success("Message sent successfully. We'll be in touch soon.");

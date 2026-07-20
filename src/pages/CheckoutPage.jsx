@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../lib/firebase";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { initiateRazorpayPayment } from "../lib/razorpay";
@@ -51,22 +49,27 @@ export default function CheckoutPage() {
 
     setLoading(true);
     try {
-      // 1. Create pending order in Firestore
+      // 1. Create mock order
+      const mockOrderId = "mock_" + Math.random().toString(36).substr(2, 9);
       const orderData = {
+        id: mockOrderId,
         userId: user ? user.uid : "guest",
         items,
         totalAmount: subtotal,
         shippingAddress: cleanForm,
         status: "pending",
-        createdAt: serverTimestamp(),
+        createdAt: new Date().toISOString(),
       };
-      const orderRef = await addDoc(collection(db, "orders"), orderData);
+      
+      // Save to localStorage for mock history
+      const existingOrders = JSON.parse(localStorage.getItem("mock_orders") || "[]");
+      localStorage.setItem("mock_orders", JSON.stringify([...existingOrders, orderData]));
 
       // 2. Initiate Razorpay Payment
       try {
         const response = await initiateRazorpayPayment({
           amount: subtotal * 100, // in paise
-          orderId: orderRef.id,
+          orderId: mockOrderId,
           customerName: cleanForm.name,
           customerEmail: cleanForm.email,
           customerPhone: cleanForm.phone,
@@ -77,7 +80,7 @@ export default function CheckoutPage() {
         
         toast.success("Payment successful!");
         clearCart();
-        navigate(`/order-confirmation/${orderRef.id}`, { replace: true });
+        navigate(`/order-confirmation/${mockOrderId}`, { replace: true });
         
       } catch (payErr) {
         // Payment failed or cancelled

@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
 import { Package, MapPin, User, LogOut } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { db } from "../lib/firebase";
 import PageBanner from "../components/PageBanner";
 
 export default function AccountPage() {
@@ -14,13 +12,10 @@ export default function AccountPage() {
     const fetchOrders = async () => {
       if (!user) return;
       try {
-        const q = query(
-          collection(db, "orders"),
-          where("userId", "==", user.uid),
-          orderBy("createdAt", "desc")
-        );
-        const snap = await getDocs(q);
-        setOrders(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        const existingOrders = JSON.parse(localStorage.getItem("mock_orders") || "[]");
+        // Sort descending by date
+        existingOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setOrders(existingOrders);
       } catch (err) {
         console.error("Error fetching orders:", err);
       } finally {
@@ -111,7 +106,7 @@ export default function AccountPage() {
                     <div className="bg-charcoal/5 px-6 py-4 flex flex-wrap justify-between items-center border-b border-charcoal/10 gap-4">
                       <div>
                         <p className="font-body text-xs tracking-wider uppercase text-charcoal/50 mb-1">Order Placed</p>
-                        <p className="font-body text-sm text-charcoal">{order.createdAt?.toDate().toLocaleDateString()}</p>
+                        <p className="font-body text-sm text-charcoal">{new Date(order.createdAt).toLocaleDateString()}</p>
                       </div>
                       <div>
                         <p className="font-body text-xs tracking-wider uppercase text-charcoal/50 mb-1">Total</p>
