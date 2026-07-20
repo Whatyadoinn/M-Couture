@@ -1,10 +1,4 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
-import {
-  doc,
-  getDoc,
-  setDoc,
-} from "firebase/firestore";
-import { db } from "../lib/firebase";
 import { useAuth } from "./AuthContext";
 
 const CartContext = createContext(null);

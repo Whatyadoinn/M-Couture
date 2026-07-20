@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../lib/firebase";
 import { useCart } from "../context/CartContext";
 import { getProductById } from "../data/products"; // Fallback to local data
 import { ArrowRight, Ruler, Truck, ShieldCheck } from "lucide-react";
@@ -19,21 +17,11 @@ export default function ProductPage() {
     const fetchProduct = async () => {
       setLoading(true);
       try {
-        // Try Firestore first
-        const pRef = doc(db, "products", id);
-        const pSnap = await getDoc(pRef);
-        if (pSnap.exists()) {
-          const data = { id: pSnap.id, ...pSnap.data() };
-          setProduct(data);
-          // If Firestore product has no sizes array, provide a default
-          setSelectedSize(data.sizes?.[0] || "Free Size");
-        } else {
-          // Fallback to local data if not in Firestore (e.g. before seed)
-          const local = getProductById(id);
-          if (local) {
-            setProduct(local);
-            setSelectedSize(local.sizes?.[0] || "Free Size");
-          }
+        // Fallback to local data
+        const local = getProductById(id);
+        if (local) {
+          setProduct(local);
+          setSelectedSize(local.sizes?.[0] || "Free Size");
         }
       } catch (err) {
         console.error(err);

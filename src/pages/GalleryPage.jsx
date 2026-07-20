@@ -1,5 +1,6 @@
 import PageBanner from "../components/PageBanner";
 import Gallery from "../components/Gallery";
+import OurClients from "../components/OurClients";
 
 export default function GalleryPage() {
   return (
@@ -11,6 +12,7 @@ export default function GalleryPage() {
         image="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1600&auto=format&fit=crop"
       />
       <Gallery />
+      <OurClients />
     </>
   );
 }

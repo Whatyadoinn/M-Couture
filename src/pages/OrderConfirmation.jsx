@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../lib/firebase";
 import { CheckCircle } from "lucide-react";
 
 export default function OrderConfirmation() {
@@ -12,10 +10,10 @@ export default function OrderConfirmation() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const docRef = doc(db, "orders", id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setOrder({ id: docSnap.id, ...docSnap.data() });
+        const existingOrders = JSON.parse(localStorage.getItem("mock_orders") || "[]");
+        const found = existingOrders.find(o => o.id === id);
+        if (found) {
+          setOrder(found);
         }
       } catch (err) {
         console.error(err);
