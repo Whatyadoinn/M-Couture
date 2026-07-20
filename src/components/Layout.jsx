@@ -1,0 +1,33 @@
+import { AnimatePresence } from "framer-motion";
+import { useLocation, Outlet } from "react-router-dom";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import BackToTop from "./BackToTop";
+import WhatsAppButton from "./WhatsAppButton";
+import ScrollProgress from "./ScrollProgress";
+import PageTransition from "./PageTransition";
+import CartDrawer from "./CartDrawer";
+import { useScrollToTop } from "../hooks/useScrollToTop";
+
+export default function Layout() {
+  const location = useLocation();
+  useScrollToTop();
+
+  return (
+    <div className="min-h-screen bg-ivory">
+      <ScrollProgress />
+      <Navbar />
+      <CartDrawer />
+      <AnimatePresence mode="wait">
+        <PageTransition key={location.pathname}>
+          <main>
+            <Outlet />
+          </main>
+        </PageTransition>
+      </AnimatePresence>
+      <Footer />
+      <BackToTop />
+      <WhatsAppButton />
+    </div>
+  );
+}

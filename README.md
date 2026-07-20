@@ -1,17 +1,54 @@
-# React + Vite
+# M'Couture by Minky Narang — Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A luxury fashion boutique website built with Vite + React + Tailwind CSS v4, React Router, Framer Motion, and Lucide icons.
 
-Currently, two official plugins are available:
+## Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+npm run dev
+```
 
-## React Compiler
+Then open the local URL Vite prints (usually http://localhost:5173).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Build for production
 
-## Expanding the Oxlint configuration
+```bash
+npm run build
+npm run preview   # preview the production build locally
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
-# M-Couture
+## Project structure
+
+```
+src/
+  components/   Reusable UI: Navbar, Hero, CollectionCard, Gallery, CustomProcess,
+                BridalShowcase, About, Contact, InstagramCTA, Footer, etc.
+  pages/        Routed pages: Home, Collections, CustomCouture, Bridal,
+                GalleryPage, AboutPage, ContactPage, NotFound
+  data/         siteData.js — all placeholder copy + Unsplash placeholder images
+  hooks/        useScrolled, useScrollProgress, useScrollToTop
+  index.css     Design tokens (colors, fonts) via Tailwind v4 @theme
+```
+
+## Replacing placeholder content
+
+- **Images**: every image URL lives in `src/data/siteData.js`, plus a few
+  directly in `Hero.jsx`, `About.jsx`, `PageBanner` calls in each page, and
+  `CustomCouture.jsx`. Swap these for real photography — same dimensions/aspect
+  ratios recommended (portraits ~3:4 or 4:5).
+- **Copy**: also in `siteData.js` and directly inside each component/page.
+- **Contact details**: phone, email, Instagram handle, and WhatsApp number are
+  in `Contact.jsx`, `Footer.jsx`, `InstagramCTA.jsx`, and `WhatsAppButton.jsx`
+  — update the WhatsApp number in the `wa.me/...` links and the `tel:`/`mailto:`
+  links.
+- **Forms**: the contact form and newsletter form are currently front-end only
+  (they simulate a submission). Wire them up to your email service, form
+  backend (e.g. Formspree), or API route of choice.
+
+## Design tokens
+
+Colors and fonts are defined once in `src/index.css` under `@theme`:
+Ivory `#FAF8F5`, Champagne Gold `#C8A96A`, Soft Beige `#EDE5DA`,
+Charcoal `#2B2B2B`, White `#FFFFFF` — Playfair Display for headings,
+Poppins for body text.
