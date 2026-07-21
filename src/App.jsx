@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
+import { DataProvider } from "./context/DataContext";
 import { ProtectedRoute, AdminRoute } from "./components/ProtectedRoute";
 
 import Layout from "./components/Layout";
@@ -34,6 +35,7 @@ export default function App() {
   }, []);
 
   return (
+    <DataProvider>
     <AuthProvider>
       <CartProvider>
         <LoadingScreen visible={loading} />
@@ -81,5 +83,6 @@ export default function App() {
         </BrowserRouter>
       </CartProvider>
     </AuthProvider>
+    </DataProvider>
   );
 }

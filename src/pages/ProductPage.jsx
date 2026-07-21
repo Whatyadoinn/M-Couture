@@ -1,36 +1,28 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { getProductById } from "../data/products"; // Fallback to local data
+import { useData } from "../context/DataContext";
 import { ArrowRight, Ruler, Truck, ShieldCheck } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function ProductPage() {
   const { id } = useParams();
   const { addToCart } = useCart();
+  const { getProductById } = useData();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedImage, setSelectedImage] = useState(0);
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      setLoading(true);
-      try {
-        // Fallback to local data
-        const local = getProductById(id);
-        if (local) {
-          setProduct(local);
-          setSelectedSize(local.sizes?.[0] || "Free Size");
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProduct();
-  }, [id]);
+    setLoading(true);
+    const local = getProductById(id);
+    if (local) {
+      setProduct(local);
+      setSelectedSize(local.sizes?.[0] || "Free Size");
+    }
+    setLoading(false);
+  }, [id, getProductById]);
 
   const handleAddToCart = () => {
     if (!product) return;

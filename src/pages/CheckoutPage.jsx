@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
+import { useData } from "../context/DataContext";
 import { initiateRazorpayPayment } from "../lib/razorpay";
 import { sanitizeForm, isValidPhone, isValidEmail } from "../lib/security";
 import toast from "react-hot-toast";
@@ -10,6 +11,7 @@ import { ShieldCheck, ArrowRight, Lock } from "lucide-react";
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
   const { user, userProfile } = useAuth();
+  const { addOrder } = useData();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -61,9 +63,8 @@ export default function CheckoutPage() {
         createdAt: new Date().toISOString(),
       };
       
-      // Save to localStorage for mock history
-      const existingOrders = JSON.parse(localStorage.getItem("mock_orders") || "[]");
-      localStorage.setItem("mock_orders", JSON.stringify([...existingOrders, orderData]));
+      // Save to DataContext
+      addOrder(orderData);
 
       // 2. Initiate Razorpay Payment
       try {

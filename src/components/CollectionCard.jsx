@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
-export default function CollectionCard({ title, description, image, index = 0 }) {
+export default function CollectionCard({ id, title, description, image, index = 0 }) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 32 }}
@@ -10,7 +11,8 @@ export default function CollectionCard({ title, description, image, index = 0 })
       transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
       className="group relative flex flex-col"
     >
-      <div className="relative aspect-[3/4] overflow-hidden bg-beige">
+      <Link to={`/collections/${id}`} className="group relative flex flex-col h-full">
+        <div className="relative aspect-[3/4] overflow-hidden bg-beige">
         <img
           src={image}
           alt={`${title} — M'Couture by Minky Narang`}
@@ -32,8 +34,9 @@ export default function CollectionCard({ title, description, image, index = 0 })
             size={14}
             className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
           />
-        </button>
-      </div>
+          </button>
+        </div>
+      </Link>
     </motion.article>
   );
 }

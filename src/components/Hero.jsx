@@ -1,8 +1,11 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
+import { useData } from "../context/DataContext";
 
 export default function Hero() {
+  const { heroData } = useData();
+  
   return (
     <section className="relative h-screen w-full overflow-hidden bg-charcoal">
       {/* Background image with slow zoom */}
@@ -13,8 +16,8 @@ export default function Hero() {
         transition={{ duration: 22, ease: "linear" }}
       >
         <img
-          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1920&auto=format&fit=crop"
-          alt="Editorial fashion portrait of a woman in luxury couture"
+          src={heroData.image}
+          alt={heroData.title}
           className="h-full w-full object-cover object-top"
           loading="eager"
         />
@@ -49,7 +52,7 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.3 }}
           className="mb-5 font-body text-xs tracking-luxe text-gold-light uppercase"
         >
-          Est. Panipat &mdash; House of Minky Narang
+          {heroData.subtitle}
         </motion.p>
 
         <motion.h1
@@ -58,7 +61,7 @@ export default function Hero() {
           transition={{ duration: 1.1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white leading-[1.05]"
         >
-          M&apos;Couture
+          {heroData.title}
         </motion.h1>
 
         <motion.div
@@ -74,7 +77,7 @@ export default function Hero() {
           transition={{ duration: 1, delay: 1.2 }}
           className="max-w-xl font-body text-sm sm:text-base tracking-[0.15em] text-beige uppercase"
         >
-          Luxury Women&apos;s Couture
+          {heroData.tagline}
         </motion.p>
 
         <motion.div
@@ -84,19 +87,19 @@ export default function Hero() {
           className="mt-10 flex flex-col sm:flex-row items-center gap-5"
         >
           <Link
-            to="/collections"
+            to={heroData.ctaPrimary.link}
             className="group relative overflow-hidden border border-gold px-9 py-3.5 font-body text-xs tracking-luxe uppercase text-white transition-colors"
           >
             <span className="absolute inset-0 -z-10 origin-left scale-x-0 bg-gold transition-transform duration-500 group-hover:scale-x-100" />
             <span className="transition-colors duration-500 group-hover:text-charcoal">
-              Explore Collection
+              {heroData.ctaPrimary.label}
             </span>
           </Link>
           <Link
-            to="/contact"
+            to={heroData.ctaSecondary.link}
             className="border border-white/40 px-9 py-3.5 font-body text-xs tracking-luxe uppercase text-white transition-colors hover:border-gold hover:text-gold-light"
           >
-            Book Consultation
+            {heroData.ctaSecondary.label}
           </Link>
         </motion.div>
       </div>

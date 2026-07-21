@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getProductsByCollection, collectionsMeta } from "../data/products";
+import { useData } from "../context/DataContext";
 import PageBanner from "../components/PageBanner";
 import CollectionCard from "../components/CollectionCard"; // We will modify this to support product mapping too or create a ProductCard. 
 import { motion } from "framer-motion";
@@ -40,30 +40,21 @@ function ProductCard({ id, title, price, image, images, index = 0 }) {
 
 export default function CollectionDetailPage() {
   const { slug } = useParams();
+  const { collections, getProductsByCollection } = useData();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  const meta = collectionsMeta[slug] || {
+  const meta = collections[slug] || {
     title: slug.replace("-", " ").toUpperCase(),
     description: "Discover our exclusive couture.",
     image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop"
   };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        // Fallback to local
-        setProducts(getProductsByCollection(slug));
-      } catch (err) {
-        console.error(err);
-        setProducts(getProductsByCollection(slug));
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, [slug]);
+    setLoading(true);
+    setProducts(getProductsByCollection(slug));
+    setLoading(false);
+  }, [slug, getProductsByCollection]);
 
   return (
     <>

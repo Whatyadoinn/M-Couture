@@ -1,8 +1,9 @@
 import PageBanner from "../components/PageBanner";
 import CollectionCard from "../components/CollectionCard";
-import { collections } from "../data/siteData";
+import { useData } from "../context/DataContext";
 
 export default function Collections() {
+  const { collections } = useData();
   return (
     <>
       <PageBanner
@@ -14,8 +15,8 @@ export default function Collections() {
       <section className="bg-ivory py-24 px-6 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
-            {collections.map((c, i) => (
-              <CollectionCard key={c.id} index={i} {...c} />
+            {Object.entries(collections).map(([slug, data], i) => (
+              <CollectionCard key={slug} index={i} id={slug} title={data.title} description={data.description} image={data.image} />
             ))}
           </div>
         </div>

@@ -1,29 +1,22 @@
 import { useState, useEffect } from "react";
 import { Package, MapPin, User, LogOut } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useData } from "../context/DataContext";
 import PageBanner from "../components/PageBanner";
 
 export default function AccountPage() {
   const { user, userProfile, signOut, isAdmin } = useAuth();
+  const { orders: allOrders } = useData();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      if (!user) return;
-      try {
-        const existingOrders = JSON.parse(localStorage.getItem("mock_orders") || "[]");
-        // Sort descending by date
-        existingOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        setOrders(existingOrders);
-      } catch (err) {
-        console.error("Error fetching orders:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchOrders();
-  }, [user]);
+    if (!user) return;
+    const userOrders = allOrders.filter(o => o.userId === user.uid || o.userId === "guest");
+    userOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    setOrders(userOrders);
+    setLoading(false);
+  }, [user, allOrders]);
 
   return (
     <>

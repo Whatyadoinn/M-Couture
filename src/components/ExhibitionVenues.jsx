@@ -1,32 +1,12 @@
 import { MapPin, Calendar } from "lucide-react";
 import Reveal from "./Reveal";
 import { motion } from "framer-motion";
-
-const exhibitions = [
-  {
-    id: 1,
-    title: "Bridal Asia Couture Week",
-    date: "October 12-14, 2026",
-    location: "Taj Palace, New Delhi",
-    image: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    title: "The Wedding Symphony",
-    date: "August 5-7, 2026",
-    location: "Jio World Convention Centre, Mumbai",
-    image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    title: "M'Couture Exclusive Showcase",
-    date: "April 20-22, 2026",
-    location: "Atelier Panipat, Haryana",
-    image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800&auto=format&fit=crop",
-  },
-];
+import { useData } from "../context/DataContext";
 
 export default function ExhibitionVenues() {
+  const { exhibitions } = useData();
+
+  if (exhibitions.length === 0) return null;
   return (
     <section className="bg-charcoal py-28 px-6 lg:px-12 text-white overflow-hidden">
       <div className="mx-auto max-w-7xl">

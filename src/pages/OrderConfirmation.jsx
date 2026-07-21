@@ -1,28 +1,21 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
+import { useData } from "../context/DataContext";
 
 export default function OrderConfirmation() {
   const { id } = useParams();
+  const { orders } = useData();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchOrder = async () => {
-      try {
-        const existingOrders = JSON.parse(localStorage.getItem("mock_orders") || "[]");
-        const found = existingOrders.find(o => o.id === id);
-        if (found) {
-          setOrder(found);
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchOrder();
-  }, [id]);
+    const found = orders.find((o) => o.id === id);
+    if (found) {
+      setOrder(found);
+    }
+    setLoading(false);
+  }, [id, orders]);
 
   if (loading) {
     return (
