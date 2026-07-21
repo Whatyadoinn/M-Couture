@@ -162,7 +162,7 @@ export default function ProductPage() {
                 <ShieldCheck size={20} className="text-gold-dark shrink-0 mt-0.5" />
                 <div>
                   <p className="font-body text-sm text-charcoal">Handcrafted Authenticity</p>
-                  <p className="font-body text-xs text-charcoal/60 mt-1">Each piece is meticulously crafted by master artisans in our Haryana atelier.</p>
+                  <p className="font-body text-xs text-charcoal/60 mt-1">Each piece is meticulously crafted by master artisans in our Panipat atelier.</p>
                 </div>
               </div>
             </div>

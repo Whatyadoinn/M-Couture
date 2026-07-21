@@ -19,12 +19,12 @@ export default function InstagramCTA() {
           Instagram.
         </p>
         <a
-          href="https://instagram.com/mcouture.byminkynarang"
+          href="https://www.instagram.com/m_couture_by_minkynarang/"
           target="_blank"
           rel="noreferrer"
           className="mt-8 inline-flex items-center gap-2 border border-charcoal px-9 py-3.5 font-body text-xs tracking-luxe uppercase text-charcoal transition-colors hover:border-gold hover:bg-gold hover:text-charcoal"
         >
-          @mcouture.byminkynarang
+          @m_couture_by_minkynarang
         </a>
       </Reveal>
     </section>

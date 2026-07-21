@@ -49,7 +49,7 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.3 }}
           className="mb-5 font-body text-xs tracking-luxe text-gold-light uppercase"
         >
-          Est. Haryana &mdash; House of Minky Narang
+          Est. Panipat &mdash; House of Minky Narang
         </motion.p>
 
         <motion.h1

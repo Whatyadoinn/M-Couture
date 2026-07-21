@@ -8,7 +8,7 @@ export default function ContactPage() {
       <PageBanner
         eyebrow="We'd Love to Hear From You"
         title="Contact Us"
-        description="Visit our Haryana atelier or reach out to begin your couture journey."
+        description="Visit our Panipat atelier or reach out to begin your couture journey."
         image="https://images.unsplash.com/photo-1520367445093-50dc08a59d9d?q=80&w=1600&auto=format&fit=crop"
       />
       <Contact />

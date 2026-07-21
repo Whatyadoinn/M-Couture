@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import BackToTop from "./BackToTop";
 import WhatsAppButton from "./WhatsAppButton";
+import InstagramFloatingButton from "./InstagramFloatingButton";
 import ScrollProgress from "./ScrollProgress";
 import PageTransition from "./PageTransition";
 import CartDrawer from "./CartDrawer";
@@ -27,6 +28,7 @@ export default function Layout() {
       </AnimatePresence>
       <Footer />
       <BackToTop />
+      <InstagramFloatingButton />
       <WhatsAppButton />
     </div>
   );

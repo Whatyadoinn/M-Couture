@@ -15,7 +15,7 @@ export default function Home() {
     <>
       <Hero />
 
-      <section id="collections" className="bg-ivory py-28 px-6 lg:px-12">
+      {/* <section id="collections" className="bg-ivory py-28 px-6 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <Reveal className="flex flex-col items-center text-center">
             <p className="font-body text-xs tracking-luxe text-gold-dark uppercase">
@@ -42,10 +42,10 @@ export default function Home() {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <CustomProcess />
-      <BridalShowcase />
+      {/* <BridalShowcase /> */}
       <About />
       <InstagramCTA />
       <Newsletter />

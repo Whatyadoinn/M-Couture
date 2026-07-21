@@ -10,13 +10,13 @@ const details = [
   {
     icon: MapPin,
     label: "Boutique Location",
-    value: "M'Couture Atelier, Haryana, India",
+    value: "SCO 18, Sec 24, TDI City, Panipat, Haryana",
   },
   {
     icon: Phone,
     label: "Phone",
-    value: "+91 98765 43210",
-    href: "tel:+919053040305",
+    value: "+91 99961 00019",
+    href: "tel:+919996100019",
   },
   {
     icon: Mail,
@@ -27,8 +27,8 @@ const details = [
   {
     icon: InstagramIcon,
     label: "Instagram",
-    value: "@mcouture.byminkynarang",
-    href: "https://www.instagram.com/m_couture_by_minkynarang?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
+    value: "@m_couture_by_minkynarang",
+    href: "https://www.instagram.com/m_couture_by_minkynarang/",
   },
 ];
 
@@ -122,7 +122,7 @@ export default function Contact() {
               ))}
 
               <a
-                href="https://wa.me/919876543210"
+                href="https://wa.me/919996100019"
                 target="_blank"
                 rel="noreferrer"
                 className="mt-4 inline-flex items-center gap-2.5 bg-gold px-7 py-3.5 font-body text-xs tracking-luxe uppercase text-charcoal transition-transform hover:scale-[1.02]"
@@ -211,10 +211,15 @@ export default function Contact() {
             <div className="relative overflow-hidden border border-gold/20" style={{ aspectRatio: '16/5' }}>
               <iframe
                 title="M'Couture Atelier Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3507.203233942696!2d77.0688866!3d28.4594965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d18b68ba0e01d%3A0x2cf6003b80b99fe6!2sHaryana%2C%20India!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3476.880020041284!2d76.99210027583419!3d29.37380205003328!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ddb00081e978d%3A0x44d868fe5ba51758!2sM%20Couture%20by%20Minky%20Narang!5e0!3m2!1sen!2sin!4v1784617040075!5m2!1sen!2sin"
                 width="100%"
                 height="100%"
-                style={{ border: 0, position: 'absolute', inset: 0 }}
+                style={{ 
+                  border: 0, 
+                  position: 'absolute', 
+                  inset: 0, 
+                  filter: 'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)' 
+                }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"

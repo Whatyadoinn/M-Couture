@@ -8,7 +8,7 @@ export default function AboutPage() {
       <PageBanner
         eyebrow="Our Story"
         title="About M'Couture"
-        description="A premium Haryana boutique devoted to luxury women's couture."
+        description="A premium Panipat boutique devoted to luxury women's couture."
         image="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?q=80&w=1600&auto=format&fit=crop"
       />
       <About />

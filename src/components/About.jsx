@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import Reveal from "./Reveal";
+import founderImg from "../Images/Minky Narang.JPG";
 
 export default function About() {
   return (
@@ -14,7 +15,7 @@ export default function About() {
         >
           <div className="relative aspect-[4/5] overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?q=80&w=1000&auto=format&fit=crop"
+              src={founderImg}
               alt="Minky Narang, founder and designer at M'Couture"
               loading="lazy"
               className="h-full w-full object-cover"
@@ -32,7 +33,7 @@ export default function About() {
           </h2>
           <div className="mt-5 h-px w-16 bg-gold" />
           <p className="mt-6 font-body text-[15px] leading-relaxed text-charcoal/75">
-            Nestled in the heart of Haryana, M&apos;Couture is a premium
+            Nestled in the heart of Panipat, Haryana, M&apos;Couture is a premium
             boutique founded by designer Minky Narang, dedicated to the art
             of luxury women&apos;s couture. With an eye for refined
             silhouettes and a devotion to handcraft, Minky has built a house

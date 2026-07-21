@@ -16,13 +16,19 @@ export default function Footer() {
             </p>
             <p className="mt-5 max-w-xs font-body text-sm leading-relaxed text-beige/60">
               Luxury women&apos;s couture, custom bridal wear and trousseau
-              collections — handcrafted in Haryana.
+              collections — handcrafted in Panipat.
             </p>
             <div className="mt-6 flex gap-4">
-              {[InstagramIcon, FacebookIcon, YoutubeIcon].map((Icon, i) => (
+              {[
+                { Icon: InstagramIcon, href: "https://www.instagram.com/m_couture_by_minkynarang/" },
+                { Icon: FacebookIcon, href: "#" },
+                { Icon: YoutubeIcon, href: "#" }
+              ].map(({ Icon, href }, i) => (
                 <a
                   key={i}
-                  href="#"
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
                   aria-label="Social media link"
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-beige/70 transition-colors hover:border-gold hover:text-gold"
                 >
@@ -55,10 +61,10 @@ export default function Footer() {
               Contact
             </p>
             <ul className="mt-5 space-y-3 font-body text-sm text-beige/70">
-              <li>M&apos;Couture Atelier, Haryana, India</li>
+              <li>SCO 18, Sec 24, TDI City, Panipat, Haryana</li>
               <li>
-                <a href="tel:+919876543210" className="hover:text-gold-light">
-                  +91 98765 43210
+                <a href="tel:+919996100019" className="hover:text-gold-light">
+                  +91 99961 00019
                 </a>
               </li>
               <li>
@@ -75,7 +81,7 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} M&apos;Couture by Minky Narang. All rights reserved.
           </p>
           <p className="font-body text-xs text-beige/50">
-            Crafted with care, in Haryana.
+            Crafted with care, in Panipat.
           </p>
         </div>
       </div>

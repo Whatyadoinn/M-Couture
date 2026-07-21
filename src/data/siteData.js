@@ -4,7 +4,6 @@ export const navLinks = [
   { label: "Home", path: "/" },
   { label: "Collections", path: "/collections" },
   { label: "Custom Couture", path: "/custom-couture" },
-  { label: "Bridal", path: "/bridal" },
   { label: "Gallery", path: "/gallery" },
   { label: "About", path: "/about" },
   { label: "Contact", path: "/contact" },
