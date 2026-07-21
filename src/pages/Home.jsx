@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
-import BestsellersCarousel from "../components/BestsellersCarousel";
-import ExhibitionVenues from "../components/ExhibitionVenues";
 import CollectionCard from "../components/CollectionCard";
 import CustomProcess from "../components/CustomProcess";
 import BridalShowcase from "../components/BridalShowcase";
@@ -12,23 +10,12 @@ import Contact from "../components/Contact";
 import Reveal from "../components/Reveal";
 import { collections } from "../data/siteData";
 
-import { useData } from "../context/DataContext";
-
 export default function Home() {
-  const { collections } = useData();
-  const collectionList = Object.keys(collections).map(slug => ({
-    id: slug,
-    slug,
-    ...collections[slug]
-  }));
-
   return (
     <>
       <Hero />
-      <BestsellersCarousel />
-      <ExhibitionVenues />
 
-      <section id="collections" className="bg-ivory py-28 px-6 lg:px-12">
+      {/* <section id="collections" className="bg-ivory py-28 px-6 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <Reveal className="flex flex-col items-center text-center">
             <p className="font-body text-xs tracking-luxe text-gold-dark uppercase">
@@ -41,7 +28,7 @@ export default function Home() {
           </Reveal>
 
           <div className="mt-16 grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-            {collectionList.map((c, i) => (
+            {collections.map((c, i) => (
               <CollectionCard key={c.id} index={i} {...c} />
             ))}
           </div>
@@ -55,10 +42,10 @@ export default function Home() {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <CustomProcess />
-      <BridalShowcase />
+      {/* <BridalShowcase /> */}
       <About />
       <InstagramCTA />
       <Newsletter />
