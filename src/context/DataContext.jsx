@@ -112,7 +112,10 @@ export function DataProvider({ children }) {
 
   // Load everything on mount
   useEffect(() => {
-    setProducts(loadJSON("mc_products", defaultProducts));
+    fetch("http://localhost:5000/api/products")
+      .then((res) => res.json())
+      .then((data) => setProducts(data))
+      .catch((err) => console.error("Failed to fetch products:", err));
     setCollections(loadJSON("mc_collections", defaultCollectionsMeta));
     setOrders(loadJSON("mock_orders", []));
     setExhibitions(loadJSON("mc_exhibitions", defaultExhibitions));
@@ -123,7 +126,6 @@ export function DataProvider({ children }) {
   }, []);
 
   // Auto-persist on changes
-  useEffect(() => { if (loaded) saveJSON("mc_products", products); }, [products, loaded]);
   useEffect(() => { if (loaded) saveJSON("mc_collections", collections); }, [collections, loaded]);
   useEffect(() => { if (loaded) saveJSON("mock_orders", orders); }, [orders, loaded]);
   useEffect(() => { if (loaded) saveJSON("mc_exhibitions", exhibitions); }, [exhibitions, loaded]);
@@ -132,10 +134,17 @@ export function DataProvider({ children }) {
   useEffect(() => { if (loaded) saveJSON("mc_bestseller_items", bestsellerItems); }, [bestsellerItems, loaded]);
 
   // ── Product CRUD ──
-  const addProduct = useCallback((product) => {
-    const id = "prod-" + Date.now();
-    setProducts((prev) => [{ ...product, id }, ...prev]);
-    return id;
+const addProduct = useCallback((product) => {
+  fetch("http://localhost:5000/api/products", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(product),
+  })
+    .then((res) => res.json())
+    .then((newProduct) => {
+      setProducts((prev) => [newProduct, ...prev]);
+    })
+    .catch((err) => console.error("Failed to add product:", err));
   }, []);
 
   const updateProduct = useCallback((id, updates) => {

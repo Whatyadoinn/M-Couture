@@ -1,107 +1,51 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut as firebaseSignOut,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { auth } from "../lib/firebase";
 
 const AuthContext = createContext(null);
-
-// Mock admin credentials (frontend-only demo)
-const ADMIN_EMAIL = "admin@mcouture.in";
-const ADMIN_PASSWORD = "admin123";
+const ADMIN_EMAIL = "bhuvikumar1249@gmail.com"; //switch with actual admin email
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Restore session from localStorage on mount
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("mc_auth");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        setUser(parsed.user);
-        setUserProfile(parsed.userProfile);
-        setIsAdmin(parsed.isAdmin);
-      }
-    } catch {
-      // ignore
-    }
-    setLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+      setIsAdmin(firebaseUser?.email === ADMIN_EMAIL);
+      setLoading(false);
+    });
+    return unsubscribe;
   }, []);
 
-  const persistAuth = (u, profile, admin) => {
-    localStorage.setItem("mc_auth", JSON.stringify({ user: u, userProfile: profile, isAdmin: admin }));
+  const signUp = async (email, password) => {
+    await createUserWithEmailAndPassword(auth, email, password);
   };
 
-  // Sign up (mock)
-  const signUp = async (_email, _password, displayName) => {
-    const mockUser = { uid: "user-" + Date.now(), email: _email };
-    const profile = { displayName, email: _email, phone: "" };
-    setUser(mockUser);
-    setUserProfile(profile);
-    setIsAdmin(false);
-    persistAuth(mockUser, profile, false);
-  };
-
-  // Sign in (mock — recognises admin credentials)
   const signIn = async (email, password) => {
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      const adminUser = { uid: "admin-001", email: ADMIN_EMAIL };
-      const profile = { displayName: "Admin", email: ADMIN_EMAIL, phone: "" };
-      setUser(adminUser);
-      setUserProfile(profile);
-      setIsAdmin(true);
-      persistAuth(adminUser, profile, true);
-      return;
-    }
-    // Any other email/password combo → regular user
-    const mockUser = { uid: "user-" + Date.now(), email };
-    const profile = { displayName: email.split("@")[0], email, phone: "" };
-    setUser(mockUser);
-    setUserProfile(profile);
-    setIsAdmin(false);
-    persistAuth(mockUser, profile, false);
+    await signInWithEmailAndPassword(auth, email, password);
   };
 
-  // Google sign in (mock)
   const signInWithGoogle = async () => {
-    const mockUser = { uid: "google-" + Date.now(), email: "user@gmail.com" };
-    const profile = { displayName: "Google User", email: "user@gmail.com", phone: "" };
-    setUser(mockUser);
-    setUserProfile(profile);
-    setIsAdmin(false);
-    persistAuth(mockUser, profile, false);
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
   };
 
-  // Sign out
-  const signOut = () => {
-    setUser(null);
-    setUserProfile(null);
-    setIsAdmin(false);
-    localStorage.removeItem("mc_auth");
+  const signOut = async () => {
+    await firebaseSignOut(auth);
   };
 
-  // Reset password (mock)
-  const resetPassword = async (_email) => {
-    // no-op in frontend-only mode
-  };
+  const value = { user, isAdmin, loading, signUp, signIn, signInWithGoogle, signOut };
 
-  const value = {
-    user,
-    userProfile,
-    isAdmin,
-    loading,
-    signUp,
-    signIn,
-    signInWithGoogle,
-    signOut,
-    resetPassword,
-  };
-
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
