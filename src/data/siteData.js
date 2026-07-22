@@ -11,44 +11,44 @@ export const navLinks = [
 
 export const collections = [
   {
-    id: "ready-to-wear",
-    title: "Ready-to-Wear",
+    id: "western",
+    title: "Western",
     description: "Effortless silhouettes tailored for the modern woman's everyday elegance.",
     image:
       "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop",
   },
   {
-    id: "bridal-couture",
-    title: "Bridal Couture",
-    description: "Hand-embroidered bridal ensembles crafted for your most cherished day.",
+    id: "indo-western",
+    title: "Indo Western",
+    description: "A beautiful blend of modern silhouettes and traditional Indian craft.",
     image:
       "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1200&auto=format&fit=crop",
   },
   {
-    id: "trousseau",
-    title: "Trousseau Collection",
-    description: "A curated wardrobe of heirloom pieces for every wedding ceremony.",
+    id: "traditional",
+    title: "Traditional",
+    description: "Hand-embroidered ensembles crafted for your most cherished moments.",
     image:
       "https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=80&w=1200&auto=format&fit=crop",
   },
   {
-    id: "pre-wedding",
-    title: "Pre-Wedding Looks",
-    description: "Romantic, editorial outfits designed for engagements and photo stories.",
+    id: "trousseau",
+    title: "Trousseau",
+    description: "A curated wardrobe of heirloom pieces for every wedding ceremony.",
     image:
       "https://images.unsplash.com/photo-1594736797933-d0f06ba4bf95?q=80&w=1200&auto=format&fit=crop",
   },
   {
-    id: "maternity",
-    title: "Maternity Collection",
-    description: "Graceful, comfortable couture that celebrates this beautiful chapter.",
+    id: "kids",
+    title: "Kids",
+    description: "Graceful, comfortable couture designed specially for the little ones.",
     image:
       "https://images.unsplash.com/photo-1522771930-78848d9293e8?q=80&w=1200&auto=format&fit=crop",
   },
   {
-    id: "festive",
-    title: "Festive Wear",
-    description: "Opulent fabrics and rich detailing for celebrations that call for splendour.",
+    id: "pre-wedding",
+    title: "Pre Wedding",
+    description: "Romantic, editorial outfits designed for engagements and photo stories.",
     image:
       "https://images.unsplash.com/photo-1610189844942-6c8c9d7c1a3b?q=80&w=1200&auto=format&fit=crop",
   },
