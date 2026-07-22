@@ -106,7 +106,7 @@ function OverviewTab() {
    PRODUCTS TAB
    ═══════════════════════════════════════════════════════════════════ */
 function ProductsTab() {
-  const { products, collections, uct, updateProduct, deleteProduct, toggleFeatured } = useData();
+  const { products, collections, addProduct, updateProduct, deleteProduct, toggleFeatured } = useData();
   const [editing, setEditing] = useState(null); // null | "new" | product object
   const [search, setSearch] = useState("");
 

@@ -21,9 +21,9 @@ app.get("/api/products", async (req, res) => {
 });
 
 app.post("/api/products", async (req, res) => {
-  const { name, price, imageUrl, stock } = req.body;
+  const { title, description, price, comparePrice, collection, category, sku, sizes, images, inStock, featured } = req.body;
   const product = await prisma.product.create({
-    data: { name, price, imageUrl, stock },
+    data: { title, description, price, comparePrice, collection, category, sku, sizes, images, inStock, featured },
   });
   res.json(product);
 });
@@ -31,4 +31,27 @@ app.post("/api/products", async (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
+
+app.get("/api/products", async (req, res) => {
+  try {
+    const products = await prisma.product.findMany();
+    res.json(products);
+  } catch (err) {
+    console.error("GET /api/products error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/api/products", async (req, res) => {
+  try {
+    const { title, description, price, comparePrice, collection, category, sku, sizes, images, inStock, featured } = req.body;
+    const product = await prisma.product.create({
+      data: { title, description, price, comparePrice, collection, category, sku, sizes, images, inStock, featured },
+    });
+    res.json(product);
+  } catch (err) {
+    console.error("POST /api/products error:", err);
+    res.status(500).json({ error: err.message });
+  }
 });
