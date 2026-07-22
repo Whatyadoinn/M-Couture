@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import PageBanner from "../components/PageBanner";
 import CustomProcess from "../components/CustomProcess";
 import Reveal from "../components/Reveal";
+import sewingPersonImg from "../Images/sewing_fabric_person.jpg";
+import sewingPersonImg2 from "../Images/sewing_fabric_person_2.jpg";
 
 export default function CustomCouture() {
   return (
@@ -10,11 +12,21 @@ export default function CustomCouture() {
         eyebrow="Made For You"
         title="Custom Couture"
         description="A garment built around you — your story, your silhouette, your celebration."
-        image="https://images.unsplash.com/photo-1594736797933-d0f06ba4bf95?q=80&w=1600&auto=format&fit=crop"
+        image={sewingPersonImg2}
       />
 
-      <section className="bg-ivory py-24 px-6 lg:px-12">
-        <Reveal className="mx-auto max-w-3xl text-center">
+      <section className="relative overflow-hidden bg-ivory py-24 px-6 lg:px-12">
+        {/* Stitching fabric backdrop */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src={sewingPersonImg}
+            alt="Stitching fabric detail backdrop"
+            className="h-full w-full object-cover opacity-10"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-ivory via-ivory/90 to-ivory" />
+        </div>
+
+        <Reveal className="relative z-10 mx-auto max-w-3xl text-center">
           <h2 className="font-display text-3xl md:text-4xl text-charcoal">
             Couture Is a Conversation
           </h2>
