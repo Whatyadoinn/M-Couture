@@ -8,14 +8,18 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "../lib/firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 const AuthContext = createContext(null);
-const ADMIN_EMAIL = "bhuvikumar1249@gmail.com"; //switch with actual admin email
+const ADMIN_EMAIL = "mcouture.offical@gmail.com";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const resetPassword = async (email) => {
+    await sendPasswordResetEmail(auth, email);
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -43,8 +47,7 @@ export function AuthProvider({ children }) {
     await firebaseSignOut(auth);
   };
 
-  const value = { user, isAdmin, loading, signUp, signIn, signInWithGoogle, signOut };
-
+  const value = { user, isAdmin, loading, signUp, signIn, signInWithGoogle, signOut, resetPassword };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
