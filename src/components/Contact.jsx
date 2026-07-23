@@ -21,8 +21,8 @@ const details = [
   {
     icon: Mail,
     label: "Email",
-    value: "hello@mcouture.in",
-    href: "mailto:[EMAIL_ADDRESS]",
+    value: "mcouture.offical@gmail.com",
+    href: "mailto:mcouture.offical@gmail.com",
   },
   {
     icon: InstagramIcon,

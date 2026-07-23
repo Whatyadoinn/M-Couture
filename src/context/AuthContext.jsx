@@ -6,12 +6,17 @@ import {
   GoogleAuthProvider,
   signOut as firebaseSignOut,
   onAuthStateChanged,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../lib/firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
 
 const AuthContext = createContext(null);
+<<<<<<< HEAD
 const ADMIN_EMAIL = "mcouture.offical@gmail.com";
+=======
+const ADMIN_EMAIL = "mcouture.offical@gmail.com"; //switch with actual admin email
+>>>>>>> 02ca95a67da04d9fe1e661627341ffd4b1ad48aa
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -30,8 +35,13 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
-  const signUp = async (email, password) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+  const signUp = async (email, password, name) => {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    if (name) {
+      await updateProfile(userCredential.user, { displayName: name });
+      // Update local state immediately so it reflects without reloading
+      setUser({ ...userCredential.user, displayName: name });
+    }
   };
 
   const signIn = async (email, password) => {
