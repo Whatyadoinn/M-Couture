@@ -12,11 +12,7 @@ import { auth } from "../lib/firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
 
 const AuthContext = createContext(null);
-<<<<<<< HEAD
 const ADMIN_EMAIL = "mcouture.offical@gmail.com";
-=======
-const ADMIN_EMAIL = "mcouture.offical@gmail.com"; //switch with actual admin email
->>>>>>> 02ca95a67da04d9fe1e661627341ffd4b1ad48aa
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
