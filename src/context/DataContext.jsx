@@ -112,7 +112,7 @@ export function DataProvider({ children }) {
 
   // Load everything on mount
   useEffect(() => {
-    fetch("http://localhost:5000/api/products")
+    fetch("https://m-couture.onrender.com/api/products")
       .then((res) => res.json())
       .then((data) => setProducts(data))
       .catch((err) => console.error("Failed to fetch products:", err));
@@ -135,7 +135,7 @@ export function DataProvider({ children }) {
 
   // ── Product CRUD ──
 const addProduct = useCallback((product) => {
-  fetch("http://localhost:5000/api/products", {
+  fetch("https://m-couture.onrender.com/api/products", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(product),
