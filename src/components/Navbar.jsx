@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ShoppingBag, User } from "lucide-react";
 import { navLinks } from "../data/siteData";
@@ -7,17 +7,33 @@ import { useScrolled } from "../hooks/useScrolled";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 
+// Pages with light (ivory/white) backgrounds that need dark navbar text from the top
+const LIGHT_BG_PATHS = [
+  "/privacy-policy",
+  "/terms-conditions",
+  "/account",
+  "/auth",
+  "/cart",
+  "/checkout",
+  "/order-confirmation",
+];
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const scrolled = useScrolled(40);
   const { itemCount, setCartOpen } = useCart();
   const { user } = useAuth();
+  const location = useLocation();
+
+  // Use dark text if the page has a light background OR if the user has scrolled
+  const isLightPage = LIGHT_BG_PATHS.some((p) => location.pathname.startsWith(p));
+  const useDarkText = scrolled || isLightPage;
 
   return (
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
-          scrolled
+          useDarkText
             ? "bg-ivory/95 backdrop-blur-md shadow-[0_1px_0_0_rgba(200,169,106,0.25)] py-3"
             : "bg-transparent py-6"
         }`}
@@ -29,7 +45,7 @@ export default function Navbar() {
               aria-label={open ? "Close menu" : "Open menu"}
               onClick={() => setOpen((o) => !o)}
               className={`p-1 transition-colors ${
-                scrolled ? "text-charcoal" : "text-white"
+                useDarkText ? "text-charcoal" : "text-white"
               }`}
             >
               {open ? <X size={26} /> : <Menu size={26} />}
@@ -39,14 +55,14 @@ export default function Navbar() {
           <Link to="/" className="group flex items-baseline gap-2 lg:flex-none flex-1 justify-center lg:justify-start" onClick={() => setOpen(false)}>
             <span
               className={`font-display text-2xl tracking-wide transition-colors ${
-                scrolled ? "text-charcoal" : "text-white"
+                useDarkText ? "text-charcoal" : "text-white"
               }`}
             >
               M&apos;Couture
             </span>
             <span
               className={`hidden sm:inline font-body text-[10px] tracking-luxe uppercase transition-colors ${
-                scrolled ? "text-gold-dark" : "text-gold-light"
+                useDarkText ? "text-gold-dark" : "text-gold-light"
               }`}
             >
               Minky Narang
@@ -62,7 +78,7 @@ export default function Navbar() {
                     `relative font-body text-[13px] tracking-widest uppercase transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:bg-gold after:transition-all after:duration-300 ${
                       isActive ? "after:w-full" : "after:w-0 hover:after:w-full"
                     } ${
-                      scrolled
+                      useDarkText
                         ? "text-charcoal hover:text-gold-dark"
                         : "text-white hover:text-gold-light"
                     }`
@@ -77,7 +93,7 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             <Link 
               to={user ? "/account" : "/auth"}
-              className={`p-2 transition-colors ${scrolled ? "text-charcoal hover:text-gold-dark" : "text-white hover:text-gold-light"}`}
+              className={`p-2 transition-colors ${useDarkText ? "text-charcoal hover:text-gold-dark" : "text-white hover:text-gold-light"}`}
               aria-label="Account"
             >
               <User size={22} strokeWidth={1.5} />
@@ -85,7 +101,7 @@ export default function Navbar() {
             
             <button 
               onClick={() => setCartOpen(true)}
-              className={`relative p-2 transition-colors ${scrolled ? "text-charcoal hover:text-gold-dark" : "text-white hover:text-gold-light"}`}
+              className={`relative p-2 transition-colors ${useDarkText ? "text-charcoal hover:text-gold-dark" : "text-white hover:text-gold-light"}`}
               aria-label="Cart"
             >
               <ShoppingBag size={22} strokeWidth={1.5} />

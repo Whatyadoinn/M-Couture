@@ -80,9 +80,21 @@ export default function Footer() {
           <p className="font-body text-xs text-beige/50">
             &copy; {new Date().getFullYear()} M&apos;Couture by Minky Narang. All rights reserved.
           </p>
-          <p className="font-body text-xs text-beige/50">
-            Crafted with care, in Panipat.
-          </p>
+          <div className="flex items-center gap-4">
+            <Link
+              to="/privacy-policy"
+              className="font-body text-xs text-beige/50 transition-colors hover:text-gold-light"
+            >
+              Privacy Policy
+            </Link>
+            <span className="text-beige/30">|</span>
+            <Link
+              to="/terms-conditions"
+              className="font-body text-xs text-beige/50 transition-colors hover:text-gold-light"
+            >
+              Terms &amp; Conditions
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
