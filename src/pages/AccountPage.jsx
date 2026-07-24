@@ -5,7 +5,7 @@ import { useData } from "../context/DataContext";
 import PageBanner from "../components/PageBanner";
 
 export default function AccountPage() {
-  const { user, userProfile, signOut, isAdmin } = useAuth();
+  const { user, signOut, isAdmin } = useAuth();
   const { orders: allOrders } = useData();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +22,7 @@ export default function AccountPage() {
     <>
       <PageBanner
         eyebrow="Welcome Back"
-        title={userProfile?.displayName || "My Account"}
+        title={user?.displayName || user?.email?.split("@")[0] || "My Account"}
         description="Manage your orders, addresses, and personal details."
         image="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1600&auto=format&fit=crop"
       />
@@ -35,10 +35,10 @@ export default function AccountPage() {
             <div className="bg-white border border-charcoal/10 p-6">
               <div className="flex items-center gap-4 border-b border-charcoal/10 pb-6 mb-6">
                 <div className="h-12 w-12 rounded-full bg-charcoal text-white flex items-center justify-center font-display text-xl">
-                  {userProfile?.displayName?.charAt(0) || user?.email?.charAt(0) || "U"}
+                  {user?.displayName?.charAt(0) || user?.email?.charAt(0) || "U"}
                 </div>
                 <div>
-                  <p className="font-body text-sm font-medium text-charcoal">{userProfile?.displayName || "User"}</p>
+                  <p className="font-body text-sm font-medium text-charcoal">{user?.displayName || user?.email?.split("@")[0] || "User"}</p>
                   <p className="font-body text-xs text-charcoal/60">{user?.email}</p>
                 </div>
               </div>
