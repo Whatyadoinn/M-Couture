@@ -8,16 +8,18 @@ import { sanitizeForm, isValidPhone, isValidEmail } from "../lib/security";
 import toast from "react-hot-toast";
 import { ShieldCheck, ArrowRight, Lock } from "lucide-react";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
+
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
-  const { user, userProfile } = useAuth();
+  const { user } = useAuth();
   const { addOrder } = useData();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
     email: user?.email || "",
-    name: userProfile?.displayName || "",
-    phone: userProfile?.phone || "",
+    name: user?.displayName || "",
+    phone: "",
     address: "",
     city: "",
     state: "",
@@ -51,45 +53,75 @@ export default function CheckoutPage() {
 
     setLoading(true);
     try {
-      // 1. Create mock order
-      const mockOrderId = "mock_" + Math.random().toString(36).substr(2, 9);
-      const orderData = {
-        id: mockOrderId,
+      // Step 1: Create Razorpay order via backend
+      let razorpayOrderId = null;
+      try {
+        const orderRes = await fetch(`${API_URL}/api/create-order`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount: subtotal }),
+        });
+        if (orderRes.ok) {
+          const orderData = await orderRes.json();
+          razorpayOrderId = orderData.id;
+        }
+      } catch (backendErr) {
+        // Backend unavailable — Razorpay will run in demo mode
+        console.warn("Backend unavailable, running in demo mode:", backendErr);
+      }
+
+      // Step 2: Launch Razorpay payment modal
+      const paymentResult = await initiateRazorpayPayment({
+        amount: subtotal * 100, // paise
+        razorpayOrderId,
+        customerName: cleanForm.name,
+        customerEmail: cleanForm.email,
+        customerPhone: cleanForm.phone,
+      });
+
+      // Step 3: Verify payment signature (skip in demo mode)
+      if (!paymentResult.demo && razorpayOrderId) {
+        const verifyRes = await fetch(`${API_URL}/api/verify-payment`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            razorpay_order_id: paymentResult.razorpay_order_id,
+            razorpay_payment_id: paymentResult.razorpay_payment_id,
+            razorpay_signature: paymentResult.razorpay_signature,
+          }),
+        });
+        const verifyData = await verifyRes.json();
+        if (!verifyData.verified) {
+          toast.error("Payment verification failed. Please contact support.");
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Step 4: Save confirmed order to Firestore
+      const orderRecord = {
         userId: user ? user.uid : "guest",
         items,
         totalAmount: subtotal,
         shippingAddress: cleanForm,
         status: "pending",
-        createdAt: new Date().toISOString(),
+        razorpayPaymentId: paymentResult.razorpay_payment_id,
+        razorpayOrderId: paymentResult.razorpay_order_id,
       };
-      
-      // Save to DataContext
-      addOrder(orderData);
 
-      // 2. Initiate Razorpay Payment
-      try {
-        const response = await initiateRazorpayPayment({
-          amount: subtotal * 100, // in paise
-          orderId: mockOrderId,
-          customerName: cleanForm.name,
-          customerEmail: cleanForm.email,
-          customerPhone: cleanForm.phone,
-        });
-        
-        // 3. Payment Success - Order is now processing
-        // (In a real app, Razorpay webhook should confirm this on the backend too)
-        
-        toast.success("Payment successful!");
-        clearCart();
-        navigate(`/order-confirmation/${mockOrderId}`, { replace: true });
-        
-      } catch (payErr) {
-        // Payment failed or cancelled
-        toast.error(payErr.message || "Payment was cancelled or failed");
-      }
+      const firestoreId = await addOrder(orderRecord);
+
+      toast.success("Payment successful! Order confirmed.");
+      clearCart();
+      navigate(`/order-confirmation/${firestoreId}`, { replace: true });
+
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to process order. Please try again.");
+      if (err.message === "Payment cancelled") {
+        toast.error("Payment was cancelled.");
+      } else {
+        console.error(err);
+        toast.error(err.message || "Failed to process order. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -98,7 +130,7 @@ export default function CheckoutPage() {
   if (items.length === 0) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-20">
+    <div className="min-h-screen bg-ivory pt-24 pb-20">
       <div className="mx-auto max-w-6xl px-6 lg:px-12 flex flex-col lg:flex-row gap-12">
         
         {/* Left: Form */}
@@ -112,7 +144,7 @@ export default function CheckoutPage() {
 
           <form onSubmit={handleSubmit} id="checkout-form" className="space-y-8">
             {/* Contact Info */}
-            <div className="bg-white p-8 border border-charcoal/10 shadow-sm">
+            <div className="bg-white p-8 border border-charcoal/10">
               <h2 className="font-body text-sm font-medium tracking-widest uppercase text-charcoal mb-6 border-b border-charcoal/10 pb-4">Contact Information</h2>
               <div className="space-y-5">
                 <input
@@ -122,7 +154,7 @@ export default function CheckoutPage() {
                   value={form.email}
                   onChange={handleChange}
                   placeholder="Email Address"
-                  className="w-full border border-charcoal/15 bg-white py-3.5 px-4 font-body text-sm text-charcoal placeholder:text-charcoal/40 focus:border-gold focus:outline-none"
+                  className="w-full border border-charcoal/15 bg-white py-3.5 px-4 font-body text-sm text-charcoal placeholder:text-charcoal/40 focus:border-gold focus:outline-none transition-colors"
                 />
                 <input
                   name="phone"
@@ -131,13 +163,13 @@ export default function CheckoutPage() {
                   value={form.phone}
                   onChange={handleChange}
                   placeholder="Phone Number (+91...)"
-                  className="w-full border border-charcoal/15 bg-white py-3.5 px-4 font-body text-sm text-charcoal placeholder:text-charcoal/40 focus:border-gold focus:outline-none"
+                  className="w-full border border-charcoal/15 bg-white py-3.5 px-4 font-body text-sm text-charcoal placeholder:text-charcoal/40 focus:border-gold focus:outline-none transition-colors"
                 />
               </div>
             </div>
 
             {/* Shipping Info */}
-            <div className="bg-white p-8 border border-charcoal/10 shadow-sm">
+            <div className="bg-white p-8 border border-charcoal/10">
               <h2 className="font-body text-sm font-medium tracking-widest uppercase text-charcoal mb-6 border-b border-charcoal/10 pb-4">Shipping Address</h2>
               <div className="space-y-5">
                 <input
@@ -146,15 +178,15 @@ export default function CheckoutPage() {
                   value={form.name}
                   onChange={handleChange}
                   placeholder="Full Name"
-                  className="w-full border border-charcoal/15 bg-white py-3.5 px-4 font-body text-sm text-charcoal placeholder:text-charcoal/40 focus:border-gold focus:outline-none"
+                  className="w-full border border-charcoal/15 bg-white py-3.5 px-4 font-body text-sm text-charcoal placeholder:text-charcoal/40 focus:border-gold focus:outline-none transition-colors"
                 />
                 <input
                   name="address"
                   required
                   value={form.address}
                   onChange={handleChange}
-                  placeholder="Street Address (e.g. 123 Couture Lane, Apt 4B)"
-                  className="w-full border border-charcoal/15 bg-white py-3.5 px-4 font-body text-sm text-charcoal placeholder:text-charcoal/40 focus:border-gold focus:outline-none"
+                  placeholder="Street Address"
+                  className="w-full border border-charcoal/15 bg-white py-3.5 px-4 font-body text-sm text-charcoal placeholder:text-charcoal/40 focus:border-gold focus:outline-none transition-colors"
                 />
                 <div className="grid grid-cols-2 gap-5">
                   <input
@@ -163,7 +195,7 @@ export default function CheckoutPage() {
                     value={form.city}
                     onChange={handleChange}
                     placeholder="City"
-                    className="w-full border border-charcoal/15 bg-white py-3.5 px-4 font-body text-sm text-charcoal placeholder:text-charcoal/40 focus:border-gold focus:outline-none"
+                    className="w-full border border-charcoal/15 bg-white py-3.5 px-4 font-body text-sm text-charcoal placeholder:text-charcoal/40 focus:border-gold focus:outline-none transition-colors"
                   />
                   <input
                     name="state"
@@ -171,7 +203,7 @@ export default function CheckoutPage() {
                     value={form.state}
                     onChange={handleChange}
                     placeholder="State"
-                    className="w-full border border-charcoal/15 bg-white py-3.5 px-4 font-body text-sm text-charcoal placeholder:text-charcoal/40 focus:border-gold focus:outline-none"
+                    className="w-full border border-charcoal/15 bg-white py-3.5 px-4 font-body text-sm text-charcoal placeholder:text-charcoal/40 focus:border-gold focus:outline-none transition-colors"
                   />
                 </div>
                 <input
@@ -179,8 +211,8 @@ export default function CheckoutPage() {
                   required
                   value={form.pincode}
                   onChange={handleChange}
-                  placeholder="PIN Code / Zip Code"
-                  className="w-full border border-charcoal/15 bg-white py-3.5 px-4 font-body text-sm text-charcoal placeholder:text-charcoal/40 focus:border-gold focus:outline-none"
+                  placeholder="PIN Code"
+                  className="w-full border border-charcoal/15 bg-white py-3.5 px-4 font-body text-sm text-charcoal placeholder:text-charcoal/40 focus:border-gold focus:outline-none transition-colors"
                 />
               </div>
             </div>
@@ -189,7 +221,7 @@ export default function CheckoutPage() {
 
         {/* Right: Summary */}
         <div className="lg:w-2/5">
-          <div className="bg-white p-8 border border-charcoal/10 shadow-sm sticky top-24">
+          <div className="bg-white p-8 border border-charcoal/10 sticky top-24">
             <h2 className="font-body text-sm font-medium tracking-widest uppercase text-charcoal mb-6 border-b border-charcoal/10 pb-4">Order Summary</h2>
             
             <div className="space-y-4 mb-6 max-h-64 overflow-y-auto pr-2 no-scrollbar border-b border-charcoal/10 pb-6">
@@ -206,7 +238,7 @@ export default function CheckoutPage() {
                     <p className="font-body text-[10px] text-charcoal/50 uppercase">{item.size}</p>
                   </div>
                   <div className="flex items-center">
-                    <p className="font-body text-sm text-charcoal">₹{(item.price * item.quantity).toLocaleString('en-IN')}</p>
+                    <p className="font-body text-sm text-charcoal">₹{(item.price * item.quantity).toLocaleString("en-IN")}</p>
                   </div>
                 </div>
               ))}
@@ -215,7 +247,7 @@ export default function CheckoutPage() {
             <div className="space-y-3 font-body text-sm text-charcoal/80 mb-6 border-b border-charcoal/10 pb-6">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>₹{subtotal.toLocaleString('en-IN')}</span>
+                <span>₹{subtotal.toLocaleString("en-IN")}</span>
               </div>
               <div className="flex justify-between text-green-600">
                 <span>Shipping</span>
@@ -225,7 +257,7 @@ export default function CheckoutPage() {
             
             <div className="flex justify-between items-center mb-8">
               <span className="font-body text-base uppercase tracking-widest text-charcoal font-medium">Total</span>
-              <span className="font-display text-2xl text-charcoal">₹{subtotal.toLocaleString('en-IN')}</span>
+              <span className="font-display text-2xl text-charcoal">₹{subtotal.toLocaleString("en-IN")}</span>
             </div>
 
             <button
@@ -237,9 +269,7 @@ export default function CheckoutPage() {
               {loading ? (
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
               ) : (
-                <>
-                  Pay Now <ArrowRight size={14} />
-                </>
+                <>Pay Now <ArrowRight size={14} /></>
               )}
             </button>
             <p className="font-body text-[10px] text-center text-charcoal/40 mt-4 flex items-center justify-center gap-1">
