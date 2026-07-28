@@ -6,6 +6,8 @@ import Reveal from "./Reveal";
 import { sanitizeForm, isValidEmail, rateLimit } from "../lib/security";
 import toast from "react-hot-toast";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
+
 const details = [
   {
     icon: MapPin,
@@ -64,8 +66,16 @@ export default function Contact() {
 
     setStatus("sending");
     try {
-      // Mock network delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await fetch(`${API_URL}/api/enquiry`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(cleanForm),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send message via API");
+      }
+
       setStatus("sent");
       setForm({ name: "", email: "", message: "" });
       toast.success("Message sent successfully. We'll be in touch soon.");
