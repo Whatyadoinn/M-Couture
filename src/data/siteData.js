@@ -11,46 +11,40 @@ export const navLinks = [
 
 export const collections = [
   {
-    id: "western",
-    title: "Western",
-    description: "Effortless silhouettes tailored for the modern woman's everyday elegance.",
-    image:
-      "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop",
+    id: "hand-embroidery",
+    title: "Hand Embroidery",
+    description: "Masterfully handcrafted pieces featuring zardozi, phulkari, chikankari and more.",
+    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1200&auto=format&fit=crop",
   },
   {
     id: "indo-western",
     title: "Indo Western",
-    description: "A beautiful blend of modern silhouettes and traditional Indian craft.",
-    image:
-      "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1200&auto=format&fit=crop",
-  },
-  {
-    id: "traditional",
-    title: "Traditional",
-    description: "Hand-embroidered ensembles crafted for your most cherished moments.",
-    image:
-      "https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=80&w=1200&auto=format&fit=crop",
-  },
-  {
-    id: "trousseau",
-    title: "Trousseau",
-    description: "A curated wardrobe of heirloom pieces for every wedding ceremony.",
-    image:
-      "https://images.unsplash.com/photo-1594736797933-d0f06ba4bf95?q=80&w=1200&auto=format&fit=crop",
+    description: "A beautiful confluence of modern silhouettes and traditional Indian craft.",
+    image: "https://images.unsplash.com/photo-1594736797933-d0f06ba4bf95?q=80&w=1200&auto=format&fit=crop",
   },
   {
     id: "kids",
     title: "Kids",
-    description: "Graceful, comfortable couture designed specially for the little ones.",
-    image:
-      "https://images.unsplash.com/photo-1522771930-78848d9293e8?q=80&w=1200&auto=format&fit=crop",
+    description: "Miniature masterpieces of couture designed so little ones celebrate in style.",
+    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1200&auto=format&fit=crop",
   },
   {
     id: "pre-wedding",
     title: "Pre Wedding",
-    description: "Romantic, editorial outfits designed for engagements and photo stories.",
-    image:
-      "https://images.unsplash.com/photo-1610189844942-6c8c9d7c1a3b?q=80&w=1200&auto=format&fit=crop",
+    description: "Romantic, editorial looks for Mehendi, Sangeet and engagement soirées.",
+    image: "https://images.unsplash.com/photo-1520367445093-50dc08a59d9d?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: "traditional",
+    title: "Traditional",
+    description: "Heirloom-quality lehengas, sarees and suits that honour India's textile heritage.",
+    image: "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    id: "western",
+    title: "Western",
+    description: "Clean lines, luxurious fabrics and effortless silhouettes for the global woman.",
+    image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop",
   },
 ];
 
