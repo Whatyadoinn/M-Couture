@@ -118,6 +118,13 @@ export default function CheckoutPage() {
 
       const firestoreId = await addOrder(orderRecord);
 
+      // Notify admin via backend email service
+      fetch(`${API_URL}/api/notify-order`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order: orderRecord }),
+      }).catch((e) => console.error("Email notification trigger failed:", e));
+
       toast.success("Payment successful! Order confirmed.");
       clearCart();
       navigate(`/order-confirmation/${firestoreId}`, { replace: true });

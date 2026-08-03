@@ -16,6 +16,7 @@ const LIGHT_BG_PATHS = [
   "/cart",
   "/checkout",
   "/order-confirmation",
+  "/admin",
 ];
 
 export default function Navbar() {

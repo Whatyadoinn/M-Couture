@@ -3,6 +3,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
   GoogleAuthProvider,
   signOut as firebaseSignOut,
   onAuthStateChanged,
@@ -46,7 +47,16 @@ export function AuthProvider({ children }) {
 
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (err) {
+      if (err.code === "auth/popup-blocked" || err.code === "auth/cancelled-popup-request") {
+        console.warn("Popup blocked or cancelled, falling back to redirect sign-in...");
+        await signInWithRedirect(auth, provider);
+      } else {
+        throw err;
+      }
+    }
   };
 
   const signOut = async () => {

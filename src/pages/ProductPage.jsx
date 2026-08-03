@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useData } from "../context/DataContext";
-import { ArrowRight, Ruler, Truck, ShieldCheck } from "lucide-react";
+import { ArrowRight, Ruler, Truck, ShieldCheck, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 
 export default function ProductPage() {
@@ -13,6 +14,7 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedImage, setSelectedImage] = useState(0);
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -113,7 +115,10 @@ export default function ProductPage() {
               <div className="mb-10">
                 <div className="flex justify-between items-center mb-4">
                   <span className="font-body text-xs tracking-widest text-charcoal uppercase">Size</span>
-                  <button className="flex items-center gap-1 font-body text-[11px] text-charcoal/50 hover:text-charcoal transition-colors">
+                  <button 
+                    onClick={() => setIsSizeGuideOpen(true)}
+                    className="flex items-center gap-1 font-body text-[11px] text-charcoal/50 hover:text-charcoal transition-colors"
+                  >
                     <Ruler size={14} /> Size Guide
                   </button>
                 </div>
@@ -162,6 +167,98 @@ export default function ProductPage() {
           </div>
         </div>
       </div>
+
+      {/* Size Guide Modal */}
+      <AnimatePresence>
+        {isSizeGuideOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSizeGuideOpen(false)}
+              className="absolute inset-0 bg-charcoal/40 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="relative w-full max-w-2xl bg-ivory p-8 md:p-12 shadow-2xl"
+            >
+              <button 
+                onClick={() => setIsSizeGuideOpen(false)}
+                className="absolute right-6 top-6 p-2 text-charcoal/50 hover:text-charcoal transition-colors"
+              >
+                <X size={24} strokeWidth={1.5} />
+              </button>
+              
+              <p className="font-body text-xs tracking-luxe text-gold-dark uppercase mb-2">Measurements</p>
+              <h3 className="font-display text-3xl text-charcoal mb-8">Standard Size Guide</h3>
+              
+              <div className="overflow-x-auto">
+                <table className="w-full text-left font-body text-sm">
+                  <thead>
+                    <tr className="border-b border-charcoal/20">
+                      <th className="py-4 font-medium text-charcoal uppercase tracking-widest text-xs">Size</th>
+                      <th className="py-4 font-medium text-charcoal uppercase tracking-widest text-xs">UK/India</th>
+                      <th className="py-4 font-medium text-charcoal uppercase tracking-widest text-xs">Bust (in)</th>
+                      <th className="py-4 font-medium text-charcoal uppercase tracking-widest text-xs">Waist (in)</th>
+                      <th className="py-4 font-medium text-charcoal uppercase tracking-widest text-xs">Hip (in)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-charcoal/10 text-charcoal/70">
+                    <tr className="hover:bg-beige/50 transition-colors">
+                      <td className="py-4 font-medium text-charcoal">XS</td>
+                      <td className="py-4">6 / 34</td>
+                      <td className="py-4">32</td>
+                      <td className="py-4">26</td>
+                      <td className="py-4">36</td>
+                    </tr>
+                    <tr className="hover:bg-beige/50 transition-colors">
+                      <td className="py-4 font-medium text-charcoal">S</td>
+                      <td className="py-4">8 / 36</td>
+                      <td className="py-4">34</td>
+                      <td className="py-4">28</td>
+                      <td className="py-4">38</td>
+                    </tr>
+                    <tr className="hover:bg-beige/50 transition-colors">
+                      <td className="py-4 font-medium text-charcoal">M</td>
+                      <td className="py-4">10 / 38</td>
+                      <td className="py-4">36</td>
+                      <td className="py-4">30</td>
+                      <td className="py-4">40</td>
+                    </tr>
+                    <tr className="hover:bg-beige/50 transition-colors">
+                      <td className="py-4 font-medium text-charcoal">L</td>
+                      <td className="py-4">12 / 40</td>
+                      <td className="py-4">38</td>
+                      <td className="py-4">32</td>
+                      <td className="py-4">42</td>
+                    </tr>
+                    <tr className="hover:bg-beige/50 transition-colors">
+                      <td className="py-4 font-medium text-charcoal">XL</td>
+                      <td className="py-4">14 / 42</td>
+                      <td className="py-4">40</td>
+                      <td className="py-4">34</td>
+                      <td className="py-4">44</td>
+                    </tr>
+                    <tr className="hover:bg-beige/50 transition-colors">
+                      <td className="py-4 font-medium text-charcoal">XXL</td>
+                      <td className="py-4">16 / 44</td>
+                      <td className="py-4">42</td>
+                      <td className="py-4">36</td>
+                      <td className="py-4">46</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p className="font-body text-[11px] text-charcoal/50 mt-6 leading-relaxed">
+                * Note: These are standard body measurements. Actual garment measurements may vary depending on the silhouette and fit (e.g. relaxed fit vs tailored). For custom sizing, please contact us for a consultation.
+              </p>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

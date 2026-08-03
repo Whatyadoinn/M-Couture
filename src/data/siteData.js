@@ -17,40 +17,40 @@ export const navLinks = [
 
 export const collections = [
   {
-    id: "western",
-    title: "Western",
-    description: "Effortless silhouettes tailored for the modern woman's everyday elegance.",
-    image: colWestern,
+    id: "hand-embroidery",
+    title: "Hand Embroidery",
+    description: "Masterfully handcrafted pieces featuring zardozi, phulkari, chikankari and more.",
+    image: colTraditional,
   },
   {
     id: "indo-western",
     title: "Indo Western",
-    description: "A beautiful blend of modern silhouettes and traditional Indian craft.",
+    description: "A beautiful confluence of modern silhouettes and traditional Indian craft.",
     image: colIndoWestern,
-  },
-  {
-    id: "traditional",
-    title: "Traditional",
-    description: "Hand-embroidered ensembles crafted for your most cherished moments.",
-    image: colTraditional,
-  },
-  {
-    id: "trousseau",
-    title: "Trousseau",
-    description: "A curated wardrobe of heirloom pieces for every wedding ceremony.",
-    image: colTrousseau,
   },
   {
     id: "kids",
     title: "Kids",
-    description: "Graceful, comfortable couture designed specially for the little ones.",
+    description: "Miniature masterpieces of couture designed so little ones celebrate in style.",
     image: colKids,
   },
   {
     id: "pre-wedding",
     title: "Pre Wedding",
-    description: "Romantic, editorial outfits designed for engagements and photo stories.",
+    description: "Romantic, editorial looks for Mehendi, Sangeet and engagement soirées.",
     image: colPreWedding,
+  },
+  {
+    id: "traditional",
+    title: "Traditional",
+    description: "Heirloom-quality lehengas, sarees and suits that honour India's textile heritage.",
+    image: colTrousseau,
+  },
+  {
+    id: "western",
+    title: "Western",
+    description: "Clean lines, luxurious fabrics and effortless silhouettes for the global woman.",
+    image: colWestern,
   },
 ];
 

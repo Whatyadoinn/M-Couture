@@ -70,13 +70,31 @@ export function DataProvider({ children }) {
     // Products — ordered newest first
     const qProducts = query(collection(db, "products"), orderBy("createdAt", "desc"));
     const unsubProducts = onSnapshot(qProducts, (snap) => {
-      setProducts(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+      setProducts(snap.docs.map((d) => {
+        const data = d.data();
+        let createdAt = data.createdAt;
+        if (createdAt && typeof createdAt.toDate === "function") {
+          createdAt = createdAt.toDate().toISOString();
+        } else if (createdAt && createdAt.seconds) {
+          createdAt = new Date(createdAt.seconds * 1000).toISOString();
+        }
+        return { id: d.id, ...data, createdAt };
+      }));
     });
 
     // Orders — ordered newest first
     const qOrders = query(collection(db, "orders"), orderBy("createdAt", "desc"));
     const unsubOrders = onSnapshot(qOrders, (snap) => {
-      setOrders(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+      setOrders(snap.docs.map((d) => {
+        const data = d.data();
+        let createdAt = data.createdAt;
+        if (createdAt && typeof createdAt.toDate === "function") {
+          createdAt = createdAt.toDate().toISOString();
+        } else if (createdAt && createdAt.seconds) {
+          createdAt = new Date(createdAt.seconds * 1000).toISOString();
+        }
+        return { id: d.id, ...data, createdAt };
+      }));
     });
 
     // Exhibitions

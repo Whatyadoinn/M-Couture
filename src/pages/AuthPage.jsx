@@ -70,8 +70,9 @@ export default function AuthPage() {
       toast.success("Welcome to M'Couture!");
       navigate("/account");
     } catch (err) {
+      console.error("Google Sign-in Error:", err);
       if (err.code !== "auth/popup-closed-by-user") {
-        toast.error("Google sign-in failed. Please try again.");
+        toast.error(err.message || "Google sign-in failed. Please try again.");
       }
     }
   };
