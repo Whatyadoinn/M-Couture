@@ -64,10 +64,17 @@ export default function CheckoutPage() {
         if (orderRes.ok) {
           const orderData = await orderRes.json();
           razorpayOrderId = orderData.id;
+        } else {
+          const errData = await orderRes.json().catch(() => ({}));
+          throw new Error(errData.error || "Failed to create payment order. Please try again.");
         }
       } catch (backendErr) {
-        // Backend unavailable — Razorpay will run in demo mode
-        console.warn("Backend unavailable, running in demo mode:", backendErr);
+        // Only swallow the error if it's a network/connectivity issue (backend unavailable → demo mode fallback)
+        if (backendErr.message.includes("fetch") || backendErr.name === "TypeError") {
+          console.warn("Backend unavailable, running in demo mode:", backendErr);
+        } else {
+          throw backendErr;
+        }
       }
 
       // Step 2: Launch Razorpay payment modal

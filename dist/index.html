@@ -16,19 +16,46 @@
     script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://cdn.razorpay.com https://apis.google.com https://*.firebaseapp.com;
     worker-src 'self' blob: https://checkout.razorpay.com;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    connect-src 'self' http://localhost:5000 https://m-couture.onrender.com https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://api.imgbb.com https://lumberjack.razorpay.com https://*.razorpay.com;
+    connect-src 'self' http://localhost:5001 https://m-couture.onrender.com https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://api.imgbb.com https://lumberjack.razorpay.com https://*.razorpay.com;
     img-src 'self' data: blob: https://images.unsplash.com https://*.unsplash.com https://i.ibb.co https://firebasestorage.googleapis.com https://lh3.googleusercontent.com;
     font-src 'self' https://fonts.gstatic.com;
     frame-src 'self' https://www.google.com https://api.razorpay.com https://checkout.razorpay.com https://*.firebaseapp.com https://maps.google.com https://apis.google.com;
   ">
+
+    <!-- DNS prefetch for faster external connections -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
+
+    <!-- Preconnect only to critical font origin -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Poppins:wght@200;300;400;500;600&display=swap" rel="stylesheet" />
-    <script type="module" crossorigin src="/assets/index-D4OBpDdI.js"></script>
+
+    <!-- Google Fonts — non-render-blocking (media=print trick) -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Poppins:wght@200;300;400;500;600&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Poppins:wght@200;300;400;500;600&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <script type="module" crossorigin src="/assets/index-B_NoKSxF.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-CNC7AqOf.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-framer-CjUrjTpm.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-react-DfX_024E.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-firebase-DFX58M5G.js">
+    <link rel="modulepreload" crossorigin href="/assets/firebase-Rq7Bh3sX.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-lucide-B04TaGXo.js">
     <link rel="stylesheet" crossorigin href="/assets/index-C5VozhOJ.css">
   </head>
   <body>
     <div id="root"></div>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Razorpay is loaded on-demand in CheckoutPage only — NOT globally -->
   </body>
 </html>
+

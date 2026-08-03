@@ -1,6 +1,12 @@
 // Extended product catalogue with prices, sizes, and collections.
-// Images use free Unsplash URLs. In the admin dashboard, these can be
-// replaced with any URL (Cloudinary, ImgBB, or your own hosting).
+// Collection cover images are bundled locally. Product images in the catalogue
+// still use Unsplash and can be replaced via the admin dashboard.
+import colWestern from "../Images/collection_western.webp";
+import colIndoWestern from "../Images/collection_indo_western.webp";
+import colTraditional from "../Images/collection_traditional.webp";
+import colTrousseau from "../Images/collection_trousseau.webp";
+import colKids from "../Images/collection_kids.webp";
+import colPreWedding from "../Images/collection_pre_wedding.webp";
 
 export const products = [
   // ── Ready-to-Wear ─────────────────────────────────────────────────
@@ -195,37 +201,37 @@ export const products = [
   },
 ];
 
-// Collection metadata (enhanced from original siteData)
+// Collection metadata — cover images are locally bundled assets.
 export const collectionsMeta = {
-  "ready-to-wear": {
-    title: "Ready-to-Wear",
+  western: {
+    title: "Western",
     description: "Effortless silhouettes tailored for the modern woman's everyday elegance.",
-    image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop",
+    image: colWestern,
   },
-  "bridal-couture": {
-    title: "Bridal Couture",
-    description: "Hand-embroidered bridal ensembles crafted for your most cherished day.",
-    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1200&auto=format&fit=crop",
+  "indo-western": {
+    title: "Indo Western",
+    description: "A beautiful blend of modern silhouettes and traditional Indian craft.",
+    image: colIndoWestern,
+  },
+  traditional: {
+    title: "Traditional",
+    description: "Hand-embroidered ensembles crafted for your most cherished moments.",
+    image: colTraditional,
   },
   trousseau: {
-    title: "Trousseau Collection",
+    title: "Trousseau",
     description: "A curated wardrobe of heirloom pieces for every wedding ceremony.",
-    image: "https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=80&w=1200&auto=format&fit=crop",
+    image: colTrousseau,
+  },
+  kids: {
+    title: "Kids",
+    description: "Graceful, comfortable couture designed specially for the little ones.",
+    image: colKids,
   },
   "pre-wedding": {
-    title: "Pre-Wedding Looks",
+    title: "Pre Wedding",
     description: "Romantic, editorial outfits designed for engagements and photo stories.",
-    image: "https://images.unsplash.com/photo-1594736797933-d0f06ba4bf95?q=80&w=1200&auto=format&fit=crop",
-  },
-  maternity: {
-    title: "Maternity Collection",
-    description: "Graceful, comfortable couture that celebrates this beautiful chapter.",
-    image: "https://images.unsplash.com/photo-1522771930-78848d9293e8?q=80&w=1200&auto=format&fit=crop",
-  },
-  festive: {
-    title: "Festive Wear",
-    description: "Opulent fabrics and rich detailing for celebrations that call for splendour.",
-    image: "https://images.unsplash.com/photo-1610189844942-6c8c9d7c1a3b?q=80&w=1200&auto=format&fit=crop",
+    image: colPreWedding,
   },
 };
 

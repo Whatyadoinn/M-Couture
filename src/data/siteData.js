@@ -1,4 +1,10 @@
-// Centralized placeholder content — swap image URLs with real photography later.
+// Centralized site content — collection images are locally stored assets.
+import colWestern from "../Images/collection_western.webp";
+import colIndoWestern from "../Images/collection_indo_western.webp";
+import colTraditional from "../Images/collection_traditional.webp";
+import colTrousseau from "../Images/collection_trousseau.webp";
+import colKids from "../Images/collection_kids.webp";
+import colPreWedding from "../Images/collection_pre_wedding.webp";
 
 export const navLinks = [
   { label: "Home", path: "/" },
@@ -14,43 +20,37 @@ export const collections = [
     id: "western",
     title: "Western",
     description: "Effortless silhouettes tailored for the modern woman's everyday elegance.",
-    image:
-      "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop",
+    image: colWestern,
   },
   {
     id: "indo-western",
     title: "Indo Western",
     description: "A beautiful blend of modern silhouettes and traditional Indian craft.",
-    image:
-      "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1200&auto=format&fit=crop",
+    image: colIndoWestern,
   },
   {
     id: "traditional",
     title: "Traditional",
     description: "Hand-embroidered ensembles crafted for your most cherished moments.",
-    image:
-      "https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=80&w=1200&auto=format&fit=crop",
+    image: colTraditional,
   },
   {
     id: "trousseau",
     title: "Trousseau",
     description: "A curated wardrobe of heirloom pieces for every wedding ceremony.",
-    image:
-      "https://images.unsplash.com/photo-1594736797933-d0f06ba4bf95?q=80&w=1200&auto=format&fit=crop",
+    image: colTrousseau,
   },
   {
     id: "kids",
     title: "Kids",
     description: "Graceful, comfortable couture designed specially for the little ones.",
-    image:
-      "https://images.unsplash.com/photo-1522771930-78848d9293e8?q=80&w=1200&auto=format&fit=crop",
+    image: colKids,
   },
   {
     id: "pre-wedding",
     title: "Pre Wedding",
     description: "Romantic, editorial outfits designed for engagements and photo stories.",
-    image:
-      "https://images.unsplash.com/photo-1610189844942-6c8c9d7c1a3b?q=80&w=1200&auto=format&fit=crop",
+    image: colPreWedding,
   },
 ];
 
