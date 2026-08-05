@@ -3,30 +3,21 @@ import { useParams, Link } from "react-router-dom";
 import { useData } from "../context/DataContext";
 import PageBanner from "../components/PageBanner";
 import CollectionCard from "../components/CollectionCard"; // We will modify this to support product mapping too or create a ProductCard. 
-import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
 
 // Inline Product Card for collections page
 function ProductCard({ id, title, price, image, images, index = 0 }) {
   const displayImage = image || (images && images[0]) || "";
   
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative flex flex-col"
-    >
+    <article className="group relative flex flex-col">
       <Link to={`/product/${id}`} className="block">
         <div className="relative aspect-[3/4] overflow-hidden bg-beige">
           <img
             src={displayImage}
             alt={title}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
+            className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
         </div>
 
         <div className="mt-4 flex flex-col items-center text-center">
@@ -34,7 +25,7 @@ function ProductCard({ id, title, price, image, images, index = 0 }) {
           <p className="mt-1 font-body text-sm text-charcoal/60">₹{price?.toLocaleString('en-IN')}</p>
         </div>
       </Link>
-    </motion.article>
+    </article>
   );
 }
 
@@ -63,6 +54,7 @@ export default function CollectionDetailPage() {
         title={meta.title}
         description={meta.description}
         image={meta.image}
+        disableAnimation={true}
       />
       <section className="bg-ivory py-24 px-6 lg:px-12">
         <div className="mx-auto max-w-7xl">

@@ -1,6 +1,36 @@
 import { motion } from "framer-motion";
 
-export default function PageBanner({ eyebrow, title, description, image }) {
+export default function PageBanner({ eyebrow, title, description, image, disableAnimation = false }) {
+  if (disableAnimation) {
+    return (
+      <section className="relative flex h-[55vh] min-h-[380px] w-full items-center justify-center overflow-hidden bg-charcoal">
+        <div className="absolute inset-0">
+          <img
+            src={image}
+            alt={title}
+            className="h-full w-full object-cover opacity-60"
+            loading="eager"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-charcoal/70 via-charcoal/50 to-charcoal" />
+
+        <div className="relative z-10 flex flex-col items-center px-6 text-center">
+          <p className="font-body text-xs tracking-luxe text-gold-light uppercase">
+            {eyebrow}
+          </p>
+          <h1 className="mt-4 font-display text-4xl sm:text-5xl md:text-6xl text-white">
+            {title}
+          </h1>
+          {description && (
+            <p className="mt-5 max-w-xl font-body text-sm text-beige/80">
+              {description}
+            </p>
+          )}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="relative flex h-[55vh] min-h-[380px] w-full items-center justify-center overflow-hidden bg-charcoal">
       <motion.div
