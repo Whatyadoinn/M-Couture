@@ -10,10 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "cors": "^2.8.6",
     "dompurify": "^3.4.12",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
     "firebase": "^12.16.0",
     "framer-motion": "^12.42.2",
     "lucide-react": "^1.25.0",
+    "nodemailer": "^9.0.4",
+    "razorpay": "^2.9.8",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-hot-toast": "^2.6.0",

@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import { DataProvider } from "./context/DataContext";
+import { CurrencyProvider } from "./context/CurrencyContext";
 import { ProtectedRoute, AdminRoute } from "./components/ProtectedRoute";
 
 import Layout from "./components/Layout";
@@ -41,6 +42,7 @@ export default function App() {
   return (
     <DataProvider>
     <AuthProvider>
+      <CurrencyProvider>
       <CartProvider>
         <LoadingScreen visible={loading} />
         <Toaster 
@@ -90,6 +92,7 @@ export default function App() {
           </Suspense>
         </BrowserRouter>
       </CartProvider>
+      </CurrencyProvider>
     </AuthProvider>
     </DataProvider>
   );
