@@ -82,7 +82,7 @@ export default function AuthPage() {
       {/* Banner */}
       <section className="relative h-[40vh] min-h-[320px] w-full overflow-hidden bg-charcoal">
         <img
-          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=100&w=3840&auto=format&fit=crop"
           alt="M'Couture luxury fashion"
           className="absolute inset-0 h-full w-full object-cover opacity-40"
         />

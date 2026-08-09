@@ -86,47 +86,47 @@ export const bridalShowcase = [
     id: "bridal-lehengas",
     title: "Bridal Lehengas",
     image:
-      "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=900&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=100&w=3840&auto=format&fit=crop",
     span: "row-span-2",
   },
   {
     id: "reception-gowns",
     title: "Reception Gowns",
     image:
-      "https://images.unsplash.com/photo-1520367445093-50dc08a59d9d?q=80&w=900&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1520367445093-50dc08a59d9d?q=100&w=3840&auto=format&fit=crop",
     span: "",
   },
   {
     id: "cocktail-dresses",
     title: "Cocktail Dresses",
     image:
-      "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=900&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=100&w=3840&auto=format&fit=crop",
     span: "",
   },
   {
     id: "engagement-looks",
     title: "Engagement Looks",
     image:
-      "https://images.unsplash.com/photo-1594736797933-d0f06ba4bf95?q=80&w=900&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1594736797933-d0f06ba4bf95?q=100&w=3840&auto=format&fit=crop",
     span: "row-span-2",
   },
   {
     id: "trousseau-showcase",
     title: "Trousseau",
     image:
-      "https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=80&w=900&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=100&w=3840&auto=format&fit=crop",
     span: "",
   },
 ];
 
 export const galleryImages = [
-  "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1520367445093-50dc08a59d9d?q=80&w=800&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1594736797933-d0f06ba4bf95?q=80&w=800&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=80&w=800&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1522771930-78848d9293e8?q=80&w=800&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1618244972963-dbee1a7edc95?q=80&w=800&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=80&w=800&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=100&w=3840&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=100&w=3840&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1520367445093-50dc08a59d9d?q=100&w=3840&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=100&w=3840&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1594736797933-d0f06ba4bf95?q=100&w=3840&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=100&w=3840&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1522771930-78848d9293e8?q=100&w=3840&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1618244972963-dbee1a7edc95?q=100&w=3840&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=100&w=3840&auto=format&fit=crop",
 ];

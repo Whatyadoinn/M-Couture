@@ -14,7 +14,7 @@ export default function CartPage() {
         eyebrow="Your Selection"
         title="Shopping Cart"
         description="Review your curated pieces before proceeding to checkout."
-        image="https://images.unsplash.com/photo-1520367445093-50dc08a59d9d?q=80&w=1600&auto=format&fit=crop"
+        image="https://images.unsplash.com/photo-1520367445093-50dc08a59d9d?q=100&w=3840&auto=format&fit=crop"
       />
       
       <section className="bg-ivory py-20 px-6 lg:px-12 min-h-[50vh]">

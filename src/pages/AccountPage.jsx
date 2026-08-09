@@ -26,7 +26,7 @@ export default function AccountPage() {
         eyebrow="Welcome Back"
         title={user?.displayName || user?.email?.split("@")[0] || "My Account"}
         description="Manage your orders, addresses, and personal details."
-        image="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1600&auto=format&fit=crop"
+        image="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=100&w=3840&auto=format&fit=crop"
       />
       
       <section className="bg-ivory py-20 px-6 lg:px-12">

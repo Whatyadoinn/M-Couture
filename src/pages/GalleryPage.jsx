@@ -11,7 +11,7 @@ export default function GalleryPage() {
         eyebrow="The M'Couture Experience"
         title="Gallery & Venues"
         description="Discover our bestsellers, client stories, and upcoming showcases."
-        image="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1600&auto=format&fit=crop"
+        image="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=100&w=3840&auto=format&fit=crop"
       />
       <BestsellersCarousel />
       <OurClients />

@@ -10,10 +10,25 @@ export function CurrencyProvider({ children }) {
   useEffect(() => {
     const fetchRates = async () => {
       try {
+        const cached = localStorage.getItem("mc_exchange_rates");
+        if (cached) {
+          const { rates: cachedRates, timestamp } = JSON.parse(cached);
+          // Use cache if it's less than 12 hours old
+          if (Date.now() - timestamp < 12 * 60 * 60 * 1000) {
+            setRates(cachedRates);
+            setLoading(false);
+            return;
+          }
+        }
+
         const res = await fetch("https://open.er-api.com/v6/latest/INR");
         const data = await res.json();
         if (data.rates) {
           setRates(data.rates);
+          localStorage.setItem("mc_exchange_rates", JSON.stringify({
+            rates: data.rates,
+            timestamp: Date.now()
+          }));
         }
       } catch (err) {
         console.error("Failed to fetch exchange rates", err);

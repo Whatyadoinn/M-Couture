@@ -10,7 +10,7 @@ export default function Bridal() {
         eyebrow="For Your Forever Day"
         title="Bridal Couture"
         description="Hand-embroidered ensembles crafted for every ceremony of your wedding story."
-        image="https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1600&auto=format&fit=crop"
+        image="https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=100&w=3840&auto=format&fit=crop"
       />
 
       <section className="bg-ivory py-24 px-6 lg:px-12">

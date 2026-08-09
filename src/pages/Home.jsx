@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
-import BestsellersCarousel from "../components/BestsellersCarousel";
 import CustomProcess from "../components/CustomProcess";
 import BridalShowcase from "../components/BridalShowcase";
 import About from "../components/About";
@@ -12,7 +11,6 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <BestsellersCarousel />
 
       <CustomProcess />
       {/* <BridalShowcase /> */}
