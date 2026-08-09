@@ -48,15 +48,15 @@ export default function About() {
 
           <div className="mt-10 grid grid-cols-3 gap-6 border-t border-charcoal/10 pt-8">
             <div>
-              <p className="font-display text-3xl text-gold-dark">10+</p>
+              <p className="font-display text-3xl text-gold-dark">7+</p>
               <p className="mt-1 font-body text-[11px] tracking-wide uppercase text-charcoal/60">
                 Years of Craft
               </p>
             </div>
             <div>
-              <p className="font-display text-3xl text-gold-dark">500+</p>
+              <p className="font-display text-3xl text-gold-dark">3000+</p>
               <p className="mt-1 font-body text-[11px] tracking-wide uppercase text-charcoal/60">
-                Brides Dressed
+                Dresses Delivered
               </p>
             </div>
             <div>

@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useData } from "../context/DataContext";
+import { useCurrency } from "../context/CurrencyContext";
 import PageBanner from "../components/PageBanner";
 import CollectionCard from "../components/CollectionCard"; // We will modify this to support product mapping too or create a ProductCard. 
 
 // Inline Product Card for collections page
 function ProductCard({ id, title, price, image, images, index = 0 }) {
+  const { formatPrice } = useCurrency();
   const displayImage = image || (images && images[0]) || "";
   
   return (
@@ -22,7 +24,7 @@ function ProductCard({ id, title, price, image, images, index = 0 }) {
 
         <div className="mt-4 flex flex-col items-center text-center">
           <h3 className="font-display text-xl text-charcoal">{title}</h3>
-          <p className="mt-1 font-body text-sm text-charcoal/60">₹{price?.toLocaleString('en-IN')}</p>
+          <p className="mt-1 font-body text-sm text-charcoal/60">{formatPrice(price)}</p>
         </div>
       </Link>
     </article>

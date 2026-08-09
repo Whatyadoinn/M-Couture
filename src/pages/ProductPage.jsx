@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useData } from "../context/DataContext";
+import { useCurrency } from "../context/CurrencyContext";
 import { ArrowRight, Ruler, Truck, ShieldCheck, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
@@ -10,6 +11,7 @@ export default function ProductPage() {
   const { id } = useParams();
   const { addToCart } = useCart();
   const { getProductById } = useData();
+  const { formatPrice } = useCurrency();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState("");
@@ -87,7 +89,14 @@ export default function ProductPage() {
               ))}
             </div>
             <div className="relative aspect-[3/4] w-full flex-1 bg-beige overflow-hidden">
-              <img src={images[selectedImage]} alt={product.title} className="h-full w-full object-cover" />
+              <img 
+                src={images[selectedImage]} 
+                alt={product.title} 
+                className="h-full w-full object-cover" 
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+              />
             </div>
           </div>
 
@@ -100,9 +109,9 @@ export default function ProductPage() {
               {product.title}
             </h1>
             <div className="flex items-center gap-4 mb-8">
-              <span className="font-body text-xl text-charcoal">₹{product.price?.toLocaleString('en-IN')}</span>
+              <span className="font-body text-xl text-charcoal">{formatPrice(product.price)}</span>
               {product.comparePrice && (
-                <span className="font-body text-sm text-charcoal/40 line-through">₹{product.comparePrice.toLocaleString('en-IN')}</span>
+                <span className="font-body text-sm text-charcoal/40 line-through">{formatPrice(product.comparePrice)}</span>
               )}
             </div>
 

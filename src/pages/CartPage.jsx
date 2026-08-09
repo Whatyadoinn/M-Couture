@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { Trash2, Plus, Minus, ArrowRight } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { useCurrency } from "../context/CurrencyContext";
 import PageBanner from "../components/PageBanner";
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, subtotal } = useCart();
+  const { formatPrice } = useCurrency();
 
   return (
     <>
@@ -68,7 +70,7 @@ export default function CartPage() {
                       </div>
                       
                       <div className="col-span-3 text-right w-full md:w-auto">
-                        <p className="font-body text-lg text-charcoal">₹{(item.price * item.quantity).toLocaleString('en-IN')}</p>
+                        <p className="font-body text-lg text-charcoal">{formatPrice(item.price * item.quantity)}</p>
                       </div>
                     </div>
                   ))}
@@ -83,7 +85,7 @@ export default function CartPage() {
                   <div className="space-y-4 font-body text-sm text-charcoal/80 mb-6 border-b border-charcoal/10 pb-6">
                     <div className="flex justify-between">
                       <span>Subtotal</span>
-                      <span>₹{subtotal.toLocaleString('en-IN')}</span>
+                      <span>{formatPrice(subtotal)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Shipping</span>
@@ -93,7 +95,7 @@ export default function CartPage() {
                   
                   <div className="flex justify-between items-center mb-8">
                     <span className="font-body text-sm uppercase tracking-widest text-charcoal">Total</span>
-                    <span className="font-display text-2xl text-charcoal">₹{subtotal.toLocaleString('en-IN')}</span>
+                    <span className="font-display text-2xl text-charcoal">{formatPrice(subtotal)}</span>
                   </div>
                   
                   <Link 

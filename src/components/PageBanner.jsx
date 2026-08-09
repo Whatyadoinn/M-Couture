@@ -10,6 +10,8 @@ export default function PageBanner({ eyebrow, title, description, image, disable
             alt={title}
             className="h-full w-full object-cover opacity-60"
             loading="eager"
+            fetchPriority="high"
+            decoding="async"
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-charcoal/70 via-charcoal/50 to-charcoal" />
@@ -44,6 +46,8 @@ export default function PageBanner({ eyebrow, title, description, image, disable
           alt={title}
           className="h-full w-full object-cover opacity-60"
           loading="eager"
+          fetchPriority="high"
+          decoding="async"
         />
       </motion.div>
       <div className="absolute inset-0 bg-gradient-to-b from-charcoal/70 via-charcoal/50 to-charcoal" />

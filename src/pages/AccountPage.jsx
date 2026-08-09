@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { Package, MapPin, User, LogOut } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useData } from "../context/DataContext";
+import { useCurrency } from "../context/CurrencyContext";
 import PageBanner from "../components/PageBanner";
 
 export default function AccountPage() {
   const { user, signOut, isAdmin } = useAuth();
   const { orders: allOrders } = useData();
+  const { formatPrice } = useCurrency();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -103,7 +105,7 @@ export default function AccountPage() {
                       </div>
                       <div>
                         <p className="font-body text-xs tracking-wider uppercase text-charcoal/50 mb-1">Total</p>
-                        <p className="font-body text-sm text-charcoal">₹{order.totalAmount?.toLocaleString('en-IN')}</p>
+                        <p className="font-body text-sm text-charcoal">{formatPrice(order.totalAmount)}</p>
                       </div>
                       <div>
                         <p className="font-body text-xs tracking-wider uppercase text-charcoal/50 mb-1">Order ID</p>
@@ -131,7 +133,7 @@ export default function AccountPage() {
                             <p className="font-body text-sm text-charcoal/60">Qty: {item.quantity}</p>
                           </div>
                           <div className="text-right">
-                            <p className="font-body text-sm text-charcoal">₹{item.price?.toLocaleString('en-IN')}</p>
+                            <p className="font-body text-sm text-charcoal">{formatPrice(item.price)}</p>
                           </div>
                         </div>
                       ))}
