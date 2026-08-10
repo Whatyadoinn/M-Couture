@@ -1,11 +1,13 @@
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
-  connectAuthEmulator,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  inMemoryPersistence,
 } from "firebase/auth";
 import {
   initializeFirestore,
-  connectFirestoreEmulator,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -20,14 +22,18 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
+
+// Fix for Safari "Database is closing/hidden" error — Safari blocks IndexedDB in
+// Private Browsing and with Intelligent Tracking Prevention (ITP) enabled.
+// Try LOCAL persistence first, fall back to SESSION, then in-memory.
+setPersistence(auth, browserLocalPersistence).catch(() => {
+  return setPersistence(auth, browserSessionPersistence).catch(() => {
+    return setPersistence(auth, inMemoryPersistence);
+  });
+});
+
 export const db = initializeFirestore(app, {
   experimentalForceLongPolling: true,
 });
-
-// Connect to emulators in development (uncomment if using Firebase emulators)
-// if (import.meta.env.DEV) {
-//   connectAuthEmulator(auth, "http://localhost:9099");
-//   connectFirestoreEmulator(db, "localhost", 8080);
-// }
 
 export default app;

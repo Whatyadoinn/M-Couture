@@ -86,9 +86,15 @@ export default function AuthPage() {
       navigate("/account");
     } catch (err) {
       console.error("Google Sign-in Error:", err);
-      if (err.code !== "auth/popup-closed-by-user") {
-        toast.error(err.message || "Google sign-in failed. Please try again.");
+      if (err.code === "auth/popup-closed-by-user") {
+        // User closed popup — do nothing
+        return;
       }
+      if (err.message?.includes("Database is closing") || err.message?.includes("hidden")) {
+        toast.error("Google sign-in is blocked by your browser's privacy settings. Please disable Private Browsing or allow storage for this site.");
+        return;
+      }
+      toast.error(err.message || "Google sign-in failed. Please try again.");
     }
   };
 
