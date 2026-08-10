@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { sanitize, isValidEmail, validatePassword } from "../lib/security";
+import { sanitize, isValidEmail, validatePassword, rateLimit } from "../lib/security";
 import toast from "react-hot-toast";
 
 export default function AuthPage() {
@@ -24,6 +24,14 @@ export default function AuthPage() {
 
     if (!isValidEmail(email)) {
       toast.error("Please enter a valid email address");
+      return;
+    }
+
+    // Rate limit: 5 auth attempts per 15 minutes
+    const { allowed, resetIn } = rateLimit(`auth-${mode}`, 5, 15 * 60 * 1000);
+    if (!allowed) {
+      const minutes = Math.ceil(resetIn / 60000);
+      toast.error(`Too many attempts. Please try again in ${minutes} minutes.`);
       return;
     }
 
