@@ -3,8 +3,6 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
-  signInWithRedirect,
-  getRedirectResult,
   GoogleAuthProvider,
   signOut as firebaseSignOut,
   onAuthStateChanged,
@@ -26,11 +24,6 @@ export function AuthProvider({ children }) {
   };
 
   useEffect(() => {
-    // Process redirect result if page returned from Google redirect flow
-    getRedirectResult(auth).catch((err) => {
-      console.warn("Redirect sign-in check:", err);
-    });
-
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setIsAdmin(firebaseUser?.email === ADMIN_EMAIL);
@@ -53,20 +46,9 @@ export function AuthProvider({ children }) {
 
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (err) {
-      if (err.code === "auth/popup-closed-by-user") {
-        throw err;
-      }
-      if (err.code === "auth/unauthorized-domain") {
-        const domain = window.location.hostname;
-        throw new Error(`The domain "${domain}" is not authorized in Firebase Console. Please add "${domain}" under Firebase Console > Authentication > Settings > Authorized domains.`);
-      }
-      // For IndexedDB errors ("Database is closing/hidden"), popup blockers, cross-origin/browser restrictions, fallback to redirect
-      console.warn("Popup sign-in failed/blocked, falling back to redirect:", err);
-      await signInWithRedirect(auth, provider);
-    }
+    provider.setCustomParameters({ prompt: "select_account" });
+    // Always use popup — redirect breaks auth on custom domains (routes through firebaseapp.com)
+    await signInWithPopup(auth, provider);
   };
 
   const signOut = async () => {
