@@ -11,8 +11,15 @@ export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const { signIn, signUp, signInWithGoogle, resetPassword } = useAuth();
+  const { user, signIn, signUp, signInWithGoogle, resetPassword } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect if user is already logged in (e.g. from Google redirect or existing session)
+  useEffect(() => {
+    if (user) {
+      navigate("/account", { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleChange = (e) =>
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));

@@ -56,9 +56,12 @@ export function AuthProvider({ children }) {
     try {
       await signInWithPopup(auth, provider);
     } catch (err) {
-      // If user manually closed popup, don't redirect
       if (err.code === "auth/popup-closed-by-user") {
         throw err;
+      }
+      if (err.code === "auth/unauthorized-domain") {
+        const domain = window.location.hostname;
+        throw new Error(`The domain "${domain}" is not authorized in Firebase Console. Please add "${domain}" under Firebase Console > Authentication > Settings > Authorized domains.`);
       }
       // For IndexedDB errors ("Database is closing/hidden"), popup blockers, cross-origin/browser restrictions, fallback to redirect
       console.warn("Popup sign-in failed/blocked, falling back to redirect:", err);
