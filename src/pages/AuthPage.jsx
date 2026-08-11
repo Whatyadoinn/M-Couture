@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { sanitize, isValidEmail, validatePassword } from "../lib/security";
+import { sanitize, isValidEmail, validatePassword, rateLimit } from "../lib/security";
 import toast from "react-hot-toast";
 
 export default function AuthPage() {
@@ -11,8 +11,15 @@ export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const { signIn, signUp, signInWithGoogle, resetPassword } = useAuth();
+  const { user, signIn, signUp, signInWithGoogle, resetPassword } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect if user is already logged in (e.g. from Google redirect or existing session)
+  useEffect(() => {
+    if (user) {
+      navigate("/account", { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleChange = (e) =>
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -24,6 +31,14 @@ export default function AuthPage() {
 
     if (!isValidEmail(email)) {
       toast.error("Please enter a valid email address");
+      return;
+    }
+
+    // Rate limit: 5 auth attempts per 15 minutes
+    const { allowed, resetIn } = rateLimit(`auth-${mode}`, 5, 15 * 60 * 1000);
+    if (!allowed) {
+      const minutes = Math.ceil(resetIn / 60000);
+      toast.error(`Too many attempts. Please try again in ${minutes} minutes.`);
       return;
     }
 
@@ -71,9 +86,15 @@ export default function AuthPage() {
       navigate("/account");
     } catch (err) {
       console.error("Google Sign-in Error:", err);
-      if (err.code !== "auth/popup-closed-by-user") {
-        toast.error(err.message || "Google sign-in failed. Please try again.");
+      if (err.code === "auth/popup-closed-by-user") {
+        // User closed popup — do nothing
+        return;
       }
+      if (err.message?.includes("Database is closing") || err.message?.includes("hidden")) {
+        toast.error("Google sign-in is blocked by your browser's privacy settings. Please disable Private Browsing or allow storage for this site.");
+        return;
+      }
+      toast.error(err.message || "Google sign-in failed. Please try again.");
     }
   };
 
@@ -82,7 +103,7 @@ export default function AuthPage() {
       {/* Banner */}
       <section className="relative h-[40vh] min-h-[320px] w-full overflow-hidden bg-charcoal">
         <img
-          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=100&w=3840&auto=format&fit=crop"
           alt="M'Couture luxury fashion"
           className="absolute inset-0 h-full w-full object-cover opacity-40"
         />

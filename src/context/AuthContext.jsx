@@ -3,14 +3,13 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
-  signInWithRedirect,
   GoogleAuthProvider,
   signOut as firebaseSignOut,
   onAuthStateChanged,
   updateProfile,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth } from "../lib/firebase";
-import { sendPasswordResetEmail } from "firebase/auth";
 
 const AuthContext = createContext(null);
 const ADMIN_EMAIL = "mcouture.offical@gmail.com";
@@ -19,6 +18,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+
   const resetPassword = async (email) => {
     await sendPasswordResetEmail(auth, email);
   };
@@ -36,7 +36,6 @@ export function AuthProvider({ children }) {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     if (name) {
       await updateProfile(userCredential.user, { displayName: name });
-      // Update local state immediately so it reflects without reloading
       setUser({ ...userCredential.user, displayName: name });
     }
   };
@@ -47,16 +46,9 @@ export function AuthProvider({ children }) {
 
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (err) {
-      if (err.code === "auth/popup-blocked" || err.code === "auth/cancelled-popup-request") {
-        console.warn("Popup blocked or cancelled, falling back to redirect sign-in...");
-        await signInWithRedirect(auth, provider);
-      } else {
-        throw err;
-      }
-    }
+    provider.setCustomParameters({ prompt: "select_account" });
+    // Always use popup — redirect breaks auth on custom domains (routes through firebaseapp.com)
+    await signInWithPopup(auth, provider);
   };
 
   const signOut = async () => {

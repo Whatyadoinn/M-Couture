@@ -4,9 +4,10 @@ import Reveal from "./Reveal";
 import { useData } from "../context/DataContext";
 
 export default function BestsellersCarousel() {
-  const { bestsellerItems, bestsellersData } = useData();
+  const { bestsellersData, getFeaturedProducts } = useData();
+  const featuredProducts = getFeaturedProducts();
 
-  if (!bestsellerItems || bestsellerItems.length === 0) return null;
+  if (!featuredProducts || featuredProducts.length === 0) return null;
   return (
     <section className="bg-ivory py-28 overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 lg:px-12 mb-16 text-center">
@@ -33,15 +34,15 @@ export default function BestsellersCarousel() {
           className="flex whitespace-nowrap gap-6 px-3"
         >
           {/* Double the array for seamless infinite scroll */}
-          {[...bestsellerItems, ...bestsellerItems].map((item, index) => (
+          {[...featuredProducts, ...featuredProducts].map((item, index) => (
             <Link
-              to={item.link || "#"}
+              to={`/product/${item.id}`}
               key={`${item.id}-${index}`}
               className="relative w-[280px] sm:w-[350px] flex-shrink-0 group/card cursor-pointer block"
             >
               <div className="aspect-[3/4] overflow-hidden bg-beige">
                 <img
-                  src={item.image || (item.images && item.images[0]) || ""}
+                  src={(item.images && item.images[0]) || item.image || ""}
                   alt={item.title}
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover/card:scale-105"
@@ -52,7 +53,7 @@ export default function BestsellersCarousel() {
                 <div className="bg-white/95 backdrop-blur-sm p-4 shadow-xl">
                   <h3 className="font-display text-lg text-charcoal">{item.title}</h3>
                   <p className="mt-1 font-body text-[10px] tracking-widest uppercase text-gold-dark">
-                    {item.subtitle}
+                    {item.category || item.collection?.replace('-', ' ')}
                   </p>
                 </div>
               </div>

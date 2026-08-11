@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
 import { useData } from "../context/DataContext";
+import { useCurrency } from "../context/CurrencyContext";
 
 export default function OrderConfirmation() {
   const { id } = useParams();
   const { orders } = useData();
+  const { formatPrice } = useCurrency();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -61,13 +63,13 @@ export default function OrderConfirmation() {
                 {item.quantity}x {item.title} <span className="text-xs text-charcoal/50">({item.size})</span>
               </span>
               <span className="font-body text-sm text-charcoal font-medium">
-                ₹{(item.price * item.quantity).toLocaleString('en-IN')}
+                {formatPrice(item.price * item.quantity)}
               </span>
             </div>
           ))}
           <div className="flex justify-between items-center mt-6 pt-4 border-t border-charcoal/10">
             <span className="font-body text-sm uppercase tracking-widest text-charcoal font-medium">Total Paid</span>
-            <span className="font-display text-xl text-charcoal">₹{order.totalAmount?.toLocaleString('en-IN')}</span>
+            <span className="font-display text-xl text-charcoal">{formatPrice(order.totalAmount)}</span>
           </div>
         </div>
 

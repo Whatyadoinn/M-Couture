@@ -20,7 +20,7 @@ export default function Hero() {
           alt={heroData.title}
           className="h-full w-full object-cover object-top"
           loading="eager"
-          fetchpriority="high"
+          fetchPriority="high"
           decoding="async"
         />
       </motion.div>

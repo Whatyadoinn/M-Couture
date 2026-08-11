@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { useData } from "../context/DataContext";
+import { useCurrency } from "../context/CurrencyContext";
 import { initiateRazorpayPayment } from "../lib/razorpay";
 import { sanitizeForm, isValidPhone, isValidEmail } from "../lib/security";
 import toast from "react-hot-toast";
@@ -14,6 +15,7 @@ export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
   const { user } = useAuth();
   const { addOrder } = useData();
+  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -252,7 +254,7 @@ export default function CheckoutPage() {
                     <p className="font-body text-[10px] text-charcoal/50 uppercase">{item.size}</p>
                   </div>
                   <div className="flex items-center">
-                    <p className="font-body text-sm text-charcoal">₹{(item.price * item.quantity).toLocaleString("en-IN")}</p>
+                    <p className="font-body text-sm text-charcoal">{formatPrice(item.price * item.quantity)}</p>
                   </div>
                 </div>
               ))}
@@ -261,7 +263,7 @@ export default function CheckoutPage() {
             <div className="space-y-3 font-body text-sm text-charcoal/80 mb-6 border-b border-charcoal/10 pb-6">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>₹{subtotal.toLocaleString("en-IN")}</span>
+                <span>{formatPrice(subtotal)}</span>
               </div>
               <div className="flex justify-between text-green-600">
                 <span>Shipping</span>
@@ -271,7 +273,7 @@ export default function CheckoutPage() {
             
             <div className="flex justify-between items-center mb-8">
               <span className="font-body text-base uppercase tracking-widest text-charcoal font-medium">Total</span>
-              <span className="font-display text-2xl text-charcoal">₹{subtotal.toLocaleString("en-IN")}</span>
+              <span className="font-display text-2xl text-charcoal">{formatPrice(subtotal)}</span>
             </div>
 
             <button

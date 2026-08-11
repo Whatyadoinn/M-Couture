@@ -9,7 +9,8 @@ export default function Collections() {
         eyebrow="The Full Edit"
         title="Collections"
         description="Six curated worlds of couture — from everyday elegance to once-in-a-lifetime celebration."
-        image="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop"
+        image="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=100&w=3840&auto=format&fit=crop"
+        disableAnimation={true}
       />
       <section className="bg-ivory py-24 px-6 lg:px-12">
         <div className="mx-auto max-w-7xl">

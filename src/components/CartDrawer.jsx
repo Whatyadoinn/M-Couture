@@ -3,9 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Trash2, Plus, Minus, ArrowRight } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { useCurrency } from "../context/CurrencyContext";
 
 export default function CartDrawer() {
   const { items, cartOpen, setCartOpen, removeFromCart, updateQuantity, subtotal } = useCart();
+  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
 
   return (
@@ -82,7 +84,7 @@ export default function CartDrawer() {
                               <Plus size={12} />
                             </button>
                           </div>
-                          <p className="font-body text-sm font-medium text-charcoal">₹{(item.price * item.quantity).toLocaleString('en-IN')}</p>
+                          <p className="font-body text-sm font-medium text-charcoal">{formatPrice(item.price * item.quantity)}</p>
                         </div>
                       </div>
                     </div>
@@ -96,7 +98,7 @@ export default function CartDrawer() {
               <div className="p-6 bg-white border-t border-charcoal/10">
                 <div className="flex justify-between items-center mb-6">
                   <span className="font-body text-sm uppercase tracking-widest text-charcoal/60">Subtotal</span>
-                  <span className="font-display text-2xl text-charcoal">₹{subtotal.toLocaleString('en-IN')}</span>
+                  <span className="font-display text-2xl text-charcoal">{formatPrice(subtotal)}</span>
                 </div>
                 <button
                   onClick={() => {

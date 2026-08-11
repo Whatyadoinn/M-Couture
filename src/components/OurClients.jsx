@@ -6,37 +6,37 @@ const clients = [
   {
     name: "Priya Sharma",
     image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=100&w=3840&auto=format&fit=crop",
     occasion: "Bridal Couture",
   },
   {
     name: "Ananya Kapoor",
     image:
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=100&w=3840&auto=format&fit=crop",
     occasion: "Reception Gown",
   },
   {
     name: "Meera Gupta",
     image:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=100&w=3840&auto=format&fit=crop",
     occasion: "Festive Wear",
   },
   {
     name: "Riya Malhotra",
     image:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=100&w=3840&auto=format&fit=crop",
     occasion: "Engagement Look",
   },
   {
     name: "Nisha Verma",
     image:
-      "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=100&w=3840&auto=format&fit=crop",
     occasion: "Trousseau",
   },
   {
     name: "Kavya Reddy",
     image:
-      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=100&w=3840&auto=format&fit=crop",
     occasion: "Pre-Wedding",
   },
 ];
