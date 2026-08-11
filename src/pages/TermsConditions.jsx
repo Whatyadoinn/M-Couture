@@ -89,6 +89,7 @@ export default function TermsConditions() {
           </section>
         </div>
       </div>
+      </div>
     </>
   );
 }
