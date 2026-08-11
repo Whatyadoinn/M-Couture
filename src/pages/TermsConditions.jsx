@@ -1,7 +1,15 @@
+import SEO from "../components/SEO";
+
 export default function TermsConditions() {
   return (
-    <div className="bg-ivory min-h-screen py-20 px-6 lg:px-12">
-      <div className="mx-auto max-w-4xl">
+    <>
+      <SEO 
+        title="Terms & Conditions"
+        description="Terms and Conditions for M'Couture by Minky Narang."
+        canonical="https://mcouture.in/terms-conditions"
+      />
+      <div className="bg-ivory min-h-screen py-20 px-6 lg:px-12">
+        <div className="mx-auto max-w-4xl">
         <p className="font-body text-xs tracking-luxe text-gold-light uppercase mb-3">Legal</p>
         <h1 className="font-display text-4xl text-charcoal mb-2">Terms &amp; Conditions</h1>
         <p className="font-body text-sm text-charcoal/50 mb-12">Last updated: July 2025</p>
@@ -81,6 +89,6 @@ export default function TermsConditions() {
           </section>
         </div>
       </div>
-    </div>
+    </>
   );
 }

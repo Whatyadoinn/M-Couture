@@ -1,10 +1,46 @@
 import PageBanner from "../components/PageBanner";
 import CollectionCard from "../components/CollectionCard";
 import { collectionsMeta } from "../data/products";
+import SEO from "../components/SEO";
 
 export default function Collections() {
+  const collectionsUrl = "https://mcouture.in/collections";
+  
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://mcouture.in/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Collections",
+        "item": collectionsUrl
+      }
+    ]
+  };
+
+  const collectionPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "All Collections | M'Couture",
+    "description": "Six curated worlds of couture — from everyday elegance to once-in-a-lifetime celebration.",
+    "url": collectionsUrl
+  };
+
   return (
     <>
+      <SEO 
+        title="Collections" 
+        description="Six curated worlds of couture — from everyday elegance to once-in-a-lifetime celebration."
+        canonical={collectionsUrl}
+        schema={[breadcrumbSchema, collectionPageSchema]}
+      />
       <PageBanner
         eyebrow="The Full Edit"
         title="Collections"

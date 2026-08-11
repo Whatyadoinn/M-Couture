@@ -1,7 +1,15 @@
+import SEO from "../components/SEO";
+
 export default function PrivacyPolicy() {
   return (
-    <div className="bg-ivory min-h-screen py-20 px-6 lg:px-12">
-      <div className="mx-auto max-w-4xl">
+    <>
+      <SEO 
+        title="Privacy Policy"
+        description="Privacy Policy for M'Couture by Minky Narang."
+        canonical="https://mcouture.in/privacy-policy"
+      />
+      <div className="bg-ivory min-h-screen py-20 px-6 lg:px-12">
+        <div className="mx-auto max-w-4xl">
         <p className="font-body text-xs tracking-luxe text-gold-light uppercase mb-3">Legal</p>
         <h1 className="font-display text-4xl text-charcoal mb-2">Privacy Policy</h1>
         <p className="font-body text-sm text-charcoal/50 mb-12">Last updated: July 2025</p>
@@ -67,6 +75,6 @@ export default function PrivacyPolicy() {
           </section>
         </div>
       </div>
-    </div>
+    </>
   );
 }

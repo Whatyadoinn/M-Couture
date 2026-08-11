@@ -4,6 +4,7 @@ import { useData } from "../context/DataContext";
 import { useCurrency } from "../context/CurrencyContext";
 import PageBanner from "../components/PageBanner";
 import CollectionCard from "../components/CollectionCard"; // We will modify this to support product mapping too or create a ProductCard. 
+import SEO from "../components/SEO";
 
 // Inline Product Card for collections page
 function ProductCard({ id, title, price, image, images, index = 0 }) {
@@ -43,6 +44,42 @@ export default function CollectionDetailPage() {
     image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=100&w=3840&auto=format&fit=crop"
   };
 
+  const collectionUrl = `https://mcouture.in/collections/${slug}`;
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://mcouture.in/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Collections",
+        "item": "https://mcouture.in/collections"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": meta.title,
+        "item": collectionUrl
+      }
+    ]
+  };
+
+  const collectionPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": `${meta.title} | M'Couture`,
+    "description": meta.description,
+    "url": collectionUrl,
+    "image": meta.image
+  };
+
   useEffect(() => {
     setLoading(true);
     setProducts(getProductsByCollection(slug));
@@ -51,6 +88,13 @@ export default function CollectionDetailPage() {
 
   return (
     <>
+      <SEO 
+        title={meta.title}
+        description={meta.description}
+        canonical={collectionUrl}
+        ogImage={meta.image}
+        schema={[breadcrumbSchema, collectionPageSchema]}
+      />
       <PageBanner
         eyebrow="The Edit"
         title={meta.title}

@@ -6,6 +6,7 @@ import { useCurrency } from "../context/CurrencyContext";
 import { ArrowRight, Ruler, Truck, ShieldCheck, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
+import SEO from "../components/SEO";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -60,9 +61,39 @@ export default function ProductPage() {
 
   // Handle both single image (from admin) and multiple images (from local data)
   const images = product.images || (product.image ? [product.image] : []);
+  const productUrl = `https://mcouture.in/product/${product.id}`;
+
+  const productSchema = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": product.title,
+    "image": images,
+    "description": product.description,
+    "sku": product.id,
+    "brand": {
+      "@type": "Brand",
+      "name": "M'Couture by Minky Narang"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": productUrl,
+      "priceCurrency": "INR",
+      "price": product.price,
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    }
+  };
 
   return (
     <div className="min-h-screen bg-ivory pt-24 pb-20">
+      <SEO 
+        title={product.title}
+        description={product.description}
+        canonical={productUrl}
+        ogImage={images[0]}
+        ogType="product"
+        schema={productSchema}
+      />
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 font-body text-[11px] tracking-widest text-charcoal/40 uppercase mb-8">

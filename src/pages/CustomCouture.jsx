@@ -4,10 +4,17 @@ import CustomProcess from "../components/CustomProcess";
 import Reveal from "../components/Reveal";
 import sewingPersonImg from "../Images/sewing_fabric_person.jpg";
 import sewingPersonImg2 from "../Images/sewing_fabric_person_2.jpg";
+import SEO from "../components/SEO";
 
 export default function CustomCouture() {
   return (
     <>
+      <SEO 
+        title="Custom Couture"
+        description="A garment built around you — your story, your silhouette, your celebration."
+        canonical="https://mcouture.in/custom-couture"
+        // ogImage is dynamic using imported asset, handle later if needed or fallback
+      />
       <PageBanner
         eyebrow="Made For You"
         title="Custom Couture"

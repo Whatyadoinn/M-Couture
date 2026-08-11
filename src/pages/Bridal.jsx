@@ -2,10 +2,17 @@ import PageBanner from "../components/PageBanner";
 import BridalShowcase from "../components/BridalShowcase";
 import InstagramCTA from "../components/InstagramCTA";
 import Reveal from "../components/Reveal";
+import SEO from "../components/SEO";
 
 export default function Bridal() {
   return (
     <>
+      <SEO 
+        title="Bridal Couture"
+        description="Hand-embroidered ensembles crafted for every ceremony of your wedding story."
+        canonical="https://mcouture.in/bridal"
+        ogImage="https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=100&w=3840&auto=format&fit=crop"
+      />
       <PageBanner
         eyebrow="For Your Forever Day"
         title="Bridal Couture"
