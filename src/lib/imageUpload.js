@@ -24,9 +24,10 @@ export async function uploadImage(file) {
   if (!file) throw new Error("No file provided");
 
   // Validate file type
-  const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-  if (!allowed.includes(file.type)) {
-    throw new Error("Invalid file type. Allowed: JPG, PNG, WebP, GIF");
+  const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/heic", "image/heif"];
+  const isHeicExt = file.name && file.name.toLowerCase().match(/\.(heic|heif)$/);
+  if (!allowed.includes(file.type) && !isHeicExt) {
+    throw new Error("Invalid file type. Allowed: JPG, PNG, WebP, GIF, HEIC");
   }
 
   // Validate file size (max 10MB)

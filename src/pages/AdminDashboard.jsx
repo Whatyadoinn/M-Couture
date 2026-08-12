@@ -305,7 +305,7 @@ function ProductForm({ product, collectionSlugs, onSave, onCancel }) {
           <div className="mt-2 flex items-center gap-3">
             <label className="cursor-pointer text-xs font-body bg-gray-100 border border-gray-300 px-3 py-1.5 rounded-lg flex items-center gap-2 hover:bg-gray-200 transition-colors">
               <ImageIcon size={14} /> {uploading ? "Uploading…" : "Upload Photo"}
-              <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploading} />
+              <input type="file" accept="image/*, .heic, .heif" onChange={handleImageUpload} className="hidden" disabled={uploading} />
             </label>
           </div>
         </div>
@@ -640,7 +640,7 @@ function ExhibitionForm({ exhibition, onSave, onCancel }) {
             <input value={form.image} onChange={(e) => update("image", e.target.value)} className={inputClass} placeholder="https://..." />
             <label className="flex cursor-pointer whitespace-nowrap items-center justify-center rounded border border-dashed border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100">
               <ImageIcon size={14} className="mr-2" /> {uploading ? "Uploading…" : "Upload"}
-              <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploading} />
+              <input type="file" accept="image/*, .heic, .heif" onChange={handleImageUpload} className="hidden" disabled={uploading} />
             </label>
           </div>
           {form.image && <img src={form.image} alt="" className="mt-2 h-20 w-32 object-cover rounded-lg border" />}
@@ -749,7 +749,7 @@ function BestsellerForm({ item, onSave, onCancel }) {
             <input value={form.image} onChange={(e) => update("image", e.target.value)} className={inputClass} placeholder="https://..." />
             <label className="cursor-pointer text-xs font-body bg-gray-100 border border-gray-300 px-3 py-1.5 rounded-lg flex items-center justify-center min-w-[100px] hover:bg-gray-200 transition-colors">
               <ImageIcon size={14} className="mr-2" /> {uploading ? "..." : "Upload"}
-              <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploading} />
+              <input type="file" accept="image/*, .heic, .heif" onChange={handleImageUpload} className="hidden" disabled={uploading} />
             </label>
           </div>
           {form.image && <img src={form.image} alt="" className="mt-2 h-32 w-24 object-cover rounded-lg border" />}
