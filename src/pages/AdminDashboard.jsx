@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import {
   Package, Plus, Image as ImageIcon, Star, StarOff, Trash2, Edit3,
   ShoppingBag, MapPin, Calendar, LayoutDashboard, Settings, X, Save,
-  ChevronDown, Eye, Search, RefreshCw, Layers,
+  ChevronDown, Eye, Search, RefreshCw, Layers, Users,
 } from "lucide-react";
 
 // ─── Shared Styles ─────────────────────────────────────────────────
@@ -21,6 +21,7 @@ const TABS = [
   { key: "products", label: "Products", icon: Package },
   { key: "collections", label: "Collections", icon: Layers },
   { key: "bestsellers", label: "Bestsellers", icon: Star },
+  { key: "clients", label: "Our Clients", icon: Users },
   { key: "orders", label: "Orders", icon: ShoppingBag },
   { key: "exhibitions", label: "Exhibitions", icon: MapPin },
   { key: "settings", label: "Site Settings", icon: Settings },
@@ -58,6 +59,7 @@ export default function AdminDashboard() {
         {activeTab === "products" && <ProductsTab />}
         {activeTab === "collections" && <CollectionsTab />}
         {activeTab === "bestsellers" && <BestsellersTab />}
+        {activeTab === "clients" && <ClientsTab />}
         {activeTab === "orders" && <OrdersTab />}
         {activeTab === "exhibitions" && <ExhibitionsTab />}
         {activeTab === "settings" && <SettingsTab />}
@@ -836,5 +838,114 @@ function SettingsTab() {
         </button>
       </div>
     </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CLIENTS TAB
+   ═══════════════════════════════════════════════════════════════════ */
+function ClientsTab() {
+  const { clientItems, addClientItem, updateClientItem, deleteClientItem } = useData();
+  const [editing, setEditing] = useState(null);
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <p className="text-sm font-body text-gray-500">{clientItems.length} clients</p>
+        <button onClick={() => setEditing("new")} className={btnPrimary}><Plus size={16} /> Add Client</button>
+      </div>
+
+      {editing !== null && (
+        <ClientForm
+          item={editing === "new" ? null : editing}
+          onSave={(data) => {
+            if (editing === "new") {
+              addClientItem(data);
+              toast.success("Client added");
+            } else {
+              updateClientItem(editing.id, data);
+              toast.success("Client updated");
+            }
+            setEditing(null);
+          }}
+          onCancel={() => setEditing(null)}
+        />
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {clientItems.map((item) => (
+          <div key={item.id} className={`${cardClass} overflow-hidden group`}>
+            <div className="aspect-[3/4] relative overflow-hidden bg-gray-100">
+              <img src={item.image} alt="" className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105" />
+            </div>
+            <div className="p-4 flex items-start justify-between">
+              <div>
+                <h4 className="font-display text-lg text-charcoal">{item.name}</h4>
+                <p className="text-xs font-body text-gray-500 mt-1 uppercase tracking-wider">{item.occasion}</p>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={() => setEditing(item)} className="p-1.5 text-gray-400 hover:text-gold transition-colors"><Edit3 size={14} /></button>
+                <button onClick={() => { if (confirm("Delete client?")) { deleteClientItem(item.id); toast.success("Deleted"); } }} className={btnDanger}><Trash2 size={14} /></button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ClientForm({ item, onSave, onCancel }) {
+  const [form, setForm] = useState({
+    name: item?.name || "",
+    occasion: item?.occasion || "",
+    image: item?.image || "",
+  });
+  const [uploading, setUploading] = useState(false);
+
+  const handleSubmit = (e) => { e.preventDefault(); onSave(form); };
+  const update = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await uploadImage(file);
+      update("image", url);
+      toast.success("Image uploaded");
+    } catch (err) {
+      toast.error(err.message || "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className={`${cardClass} p-6 mb-8`}>
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="font-display text-lg">{item ? "Edit Client" : "New Client"}</h3>
+        <button type="button" onClick={onCancel} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div><label className={labelClass}>Client Name</label><input required value={form.name} onChange={(e) => update("name", e.target.value)} className={inputClass} /></div>
+        <div><label className={labelClass}>Occasion</label><input required value={form.occasion} onChange={(e) => update("occasion", e.target.value)} className={inputClass} /></div>
+        <div className="md:col-span-2">
+          <label className={labelClass}>Image</label>
+          <div className="flex items-center gap-3">
+            <input required value={form.image} onChange={(e) => update("image", e.target.value)} className={inputClass} placeholder="https://..." />
+            <label className="cursor-pointer text-xs font-body bg-gray-100 border border-gray-300 px-3 py-1.5 rounded-lg flex items-center justify-center min-w-[100px] hover:bg-gray-200 transition-colors">
+              <ImageIcon size={14} className="mr-2" /> {uploading ? "..." : "Upload"}
+              <input type="file" accept="image/*, .heic, .heif" onChange={handleImageUpload} className="hidden" disabled={uploading} />
+            </label>
+          </div>
+          {form.image && <img src={form.image} alt="" className="mt-2 h-32 w-24 object-cover object-top rounded-lg border" />}
+        </div>
+      </div>
+      <div className="mt-5 flex gap-3">
+        <button type="submit" className={btnPrimary} disabled={uploading}><Save size={14} /> Save</button>
+        <button type="button" onClick={onCancel} className={btnSecondary}>Cancel</button>
+      </div>
+    </form>
   );
 }

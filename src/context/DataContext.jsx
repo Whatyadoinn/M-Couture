@@ -41,6 +41,15 @@ const defaultBestsellerItems = [
   { id: "bs-5", title: "Gold Tissue Saree", subtitle: "festive", image: "https://images.unsplash.com/photo-1610189844942-6c8c9d7c1a3b?q=100&w=3840&auto=format&fit=crop", link: "/product/fst-001" },
 ];
 
+const defaultClientItems = [
+  { id: "cl-1", name: "Priya Sharma", occasion: "Bridal Couture", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=100&w=3840&auto=format&fit=crop" },
+  { id: "cl-2", name: "Ananya Kapoor", occasion: "Reception Gown", image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=100&w=3840&auto=format&fit=crop" },
+  { id: "cl-3", name: "Meera Gupta", occasion: "Festive Wear", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=100&w=3840&auto=format&fit=crop" },
+  { id: "cl-4", name: "Riya Malhotra", occasion: "Engagement Look", image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=100&w=3840&auto=format&fit=crop" },
+  { id: "cl-5", name: "Nisha Verma", occasion: "Trousseau", image: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=100&w=3840&auto=format&fit=crop" },
+  { id: "cl-6", name: "Kavya Reddy", occasion: "Pre-Wedding", image: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=100&w=3840&auto=format&fit=crop" },
+];
+
 // ── Helper: read a singleton doc or return default ────────────────────
 function useSingletonDoc(docPath, defaultValue) {
   const [state, setState] = useState(defaultValue);
@@ -63,6 +72,7 @@ export function DataProvider({ children }) {
   const [heroData, setHeroData] = useSingletonDoc("siteContent/hero", defaultHeroData);
   const [bestsellersData, setBestsellersData] = useSingletonDoc("siteContent/bestsellers", defaultBestsellersData);
   const [bestsellerItems, setBestsellerItems] = useSingletonDoc("siteContent/bestsellerItems", { items: defaultBestsellerItems });
+  const [clientItems, setClientItems] = useSingletonDoc("siteContent/clientItems", { items: defaultClientItems });
   const [loaded, setLoaded] = useState(false);
 
   // ── Real-time listeners ────────────────────────────────────────────
@@ -208,6 +218,26 @@ export function DataProvider({ children }) {
     await setDoc(doc(db, "siteContent", "bestsellerItems"), { items: current.filter((i) => i.id !== id) });
   }, [bestsellerItems]);
 
+  // ── Client Items CRUD ─────────────────────────────────────────
+  const addClientItem = useCallback(async (item) => {
+    const current = clientItems.items || [];
+    const newItem = { ...item, id: "cl-" + Date.now() };
+    await setDoc(doc(db, "siteContent", "clientItems"), { items: [...current, newItem] });
+    return newItem.id;
+  }, [clientItems]);
+
+  const updateClientItem = useCallback(async (id, updates) => {
+    const current = clientItems.items || [];
+    const updated = current.map((i) => (i.id === id ? { ...i, ...updates } : i));
+    await setDoc(doc(db, "siteContent", "clientItems"), { items: updated });
+  }, [clientItems]);
+
+  const deleteClientItem = useCallback(async (id) => {
+    const current = clientItems.items || [];
+    await setDoc(doc(db, "siteContent", "clientItems"), { items: current.filter((i) => i.id !== id) });
+  }, [clientItems]);
+
+
   // ── Hero & Settings ───────────────────────────────────────────────
   const updateHero = useCallback(async (updates) => {
     await setDoc(doc(db, "siteContent", "hero"), updates, { merge: true });
@@ -241,12 +271,14 @@ export function DataProvider({ children }) {
     products, collections, orders, exhibitions,
     heroData, bestsellersData,
     bestsellerItems: bestsellerItems.items || defaultBestsellerItems,
+    clientItems: clientItems.items || defaultClientItems,
     loaded,
     addProduct, updateProduct, deleteProduct, toggleFeatured,
     updateCollection, addCollection, deleteCollection,
     addOrder, updateOrderStatus, deleteOrder,
     addExhibition, updateExhibition, deleteExhibition,
     addBestsellerItem, updateBestsellerItem, deleteBestsellerItem,
+    addClientItem, updateClientItem, deleteClientItem,
     updateHero, updateBestsellersData,
     getProductsByCollection, getProductById, getFeaturedProducts,
     resetAllData,

@@ -1,47 +1,11 @@
 import { motion } from "framer-motion";
 import Reveal from "./Reveal";
 
-// Replace these with real client data — names and image URLs
-const clients = [
-  {
-    name: "Priya Sharma",
-    image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=100&w=3840&auto=format&fit=crop",
-    occasion: "Bridal Couture",
-  },
-  {
-    name: "Ananya Kapoor",
-    image:
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=100&w=3840&auto=format&fit=crop",
-    occasion: "Reception Gown",
-  },
-  {
-    name: "Meera Gupta",
-    image:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=100&w=3840&auto=format&fit=crop",
-    occasion: "Festive Wear",
-  },
-  {
-    name: "Riya Malhotra",
-    image:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=100&w=3840&auto=format&fit=crop",
-    occasion: "Engagement Look",
-  },
-  {
-    name: "Nisha Verma",
-    image:
-      "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=100&w=3840&auto=format&fit=crop",
-    occasion: "Trousseau",
-  },
-  {
-    name: "Kavya Reddy",
-    image:
-      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=100&w=3840&auto=format&fit=crop",
-    occasion: "Pre-Wedding",
-  },
-];
+import { useData } from "../context/DataContext";
 
 export default function OurClients() {
+  const { clientItems } = useData();
+
   return (
     <section className="bg-charcoal py-28 px-6 lg:px-12">
       <div className="mx-auto max-w-7xl">
@@ -61,9 +25,9 @@ export default function OurClients() {
         </Reveal>
 
         <div className="mt-16 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:gap-6">
-          {clients.map((client, i) => (
+          {clientItems.map((client, i) => (
             <motion.div
-              key={client.name}
+              key={client.id || client.name}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.15 }}
@@ -79,7 +43,7 @@ export default function OurClients() {
                 src={client.image}
                 alt={`${client.name} — ${client.occasion}`}
                 loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
               />
 
               {/* Gradient overlay — always visible at bottom */}
