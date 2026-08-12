@@ -604,9 +604,25 @@ function ExhibitionForm({ exhibition, onSave, onCancel }) {
     location: exhibition?.location || "",
     image: exhibition?.image || "",
   });
+  const [uploading, setUploading] = useState(false);
 
   const handleSubmit = (e) => { e.preventDefault(); onSave(form); };
   const update = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await uploadImage(file);
+      update("image", url);
+      toast.success("Image uploaded");
+    } catch (err) {
+      toast.error(err.message || "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit} className={`${cardClass} p-6 mb-6`}>
@@ -619,13 +635,19 @@ function ExhibitionForm({ exhibition, onSave, onCancel }) {
         <div><label className={labelClass}>Date</label><input required value={form.date} onChange={(e) => update("date", e.target.value)} className={inputClass} placeholder="e.g. October 12-14, 2026" /></div>
         <div><label className={labelClass}>Location</label><input required value={form.location} onChange={(e) => update("location", e.target.value)} className={inputClass} placeholder="Venue, City" /></div>
         <div className="md:col-span-2">
-          <label className={labelClass}>Image URL</label>
-          <input value={form.image} onChange={(e) => update("image", e.target.value)} className={inputClass} placeholder="https://..." />
+          <label className={labelClass}>Image</label>
+          <div className="flex items-center gap-3">
+            <input value={form.image} onChange={(e) => update("image", e.target.value)} className={inputClass} placeholder="https://..." />
+            <label className="flex cursor-pointer whitespace-nowrap items-center justify-center rounded border border-dashed border-gray-300 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100">
+              <ImageIcon size={14} className="mr-2" /> {uploading ? "Uploading…" : "Upload"}
+              <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploading} />
+            </label>
+          </div>
           {form.image && <img src={form.image} alt="" className="mt-2 h-20 w-32 object-cover rounded-lg border" />}
         </div>
       </div>
       <div className="mt-5 flex gap-3">
-        <button type="submit" className={btnPrimary}><Save size={14} /> Save</button>
+        <button type="submit" className={btnPrimary} disabled={uploading}><Save size={14} /> Save</button>
         <button type="button" onClick={onCancel} className={btnSecondary}>Cancel</button>
       </div>
     </form>

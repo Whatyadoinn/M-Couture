@@ -6,7 +6,7 @@ import { navLinks } from "../data/siteData";
 import { useScrolled } from "../hooks/useScrolled";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import CurrencySelector from "./CurrencySelector";
+
 
 // Pages with light (ivory/white) backgrounds that need dark navbar text from the top
 const LIGHT_BG_PATHS = [
@@ -93,9 +93,6 @@ export default function Navbar() {
           </ul>
 
           <div className="flex items-center gap-4">
-            <div className={`hidden md:block ${useDarkText ? "text-charcoal" : "text-white"}`}>
-              <CurrencySelector />
-            </div>
             <Link 
               to={user ? "/account" : "/auth"}
               className={`p-2 transition-colors ${useDarkText ? "text-charcoal hover:text-gold-dark" : "text-white hover:text-gold-light"}`}
