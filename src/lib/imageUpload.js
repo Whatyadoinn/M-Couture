@@ -1,52 +1,45 @@
-const IMGBB_API_KEY = import.meta.env.VITE_IMGBB_API_KEY || "0c8969b9f7a7509d6f6e52c8035ed95a"; // Demo fallback key
-
 export async function uploadImage(file) {
   if (!file) throw new Error("No file provided");
 
-  const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/heic", "image/heif"];
-  const isHeicExt = file.name && file.name.toLowerCase().match(/\.(heic|heif)$/);
-  if (!allowed.includes(file.type) && !isHeicExt) {
-    throw new Error("Invalid file type. Allowed: JPG, PNG, WebP, GIF, HEIC");
-  }
-
-  if (file.size > 10 * 1024 * 1024) {
-    throw new Error("File too large. Maximum size: 10MB");
-  }
-
-  const base64 = await fileToBase64(file);
-
-  const formData = new FormData();
-  formData.append("key", IMGBB_API_KEY);
-  formData.append("image", base64.split(",")[1]); 
-
-  const res = await fetch("https://api.imgbb.com/1/upload", {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!res.ok) {
-    throw new Error("Image upload failed. Please try again.");
-  }
-
-  const data = await res.json();
-  return data.data.display_url;
-}
-
-function fileToBase64(file) {
+  // To bypass external APIs and Firebase Storage setup, we will compress the image 
+  // directly in the browser and return it as a Base64 string to be saved in Firestore.
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
     reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+        
+        // Scale down to max 600px to keep the database size small
+        const MAX_DIMENSION = 600;
+        if (width > height && width > MAX_DIMENSION) {
+          height *= MAX_DIMENSION / width;
+          width = MAX_DIMENSION;
+        } else if (height > MAX_DIMENSION) {
+          width *= MAX_DIMENSION / height;
+          height = MAX_DIMENSION;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Export as heavily compressed JPEG (approx 30-50KB per image)
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.6);
+        resolve(dataUrl);
+      };
+      img.onerror = () => reject(new Error("Failed to process image format."));
+    };
+    reader.onerror = () => reject(new Error("Failed to read file."));
   });
 }
 
 export function isValidImageUrl(url) {
   if (!url || typeof url !== "string") return false;
-  try {
-    const parsed = new URL(url);
-    return ["http:", "https:", "blob:"].includes(parsed.protocol);
-  } catch {
-    return false;
-  }
+  return url.startsWith("http") || url.startsWith("data:image");
 }
