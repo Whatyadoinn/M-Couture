@@ -896,6 +896,7 @@ function ClientsTab() {
 }
 
 function ClientForm({ item, onSave, onCancel }) {
+  const { collections } = useData();
   const [form, setForm] = useState({
     name: item?.name || "",
     occasion: item?.occasion || "",
@@ -928,8 +929,14 @@ function ClientForm({ item, onSave, onCancel }) {
         <button type="button" onClick={onCancel} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div><label className={labelClass}>Client Name</label><input required value={form.name} onChange={(e) => update("name", e.target.value)} className={inputClass} /></div>
-        <div><label className={labelClass}>Occasion</label><input required value={form.occasion} onChange={(e) => update("occasion", e.target.value)} className={inputClass} /></div>
+        <div><label className={labelClass}>Client Name</label><input value={form.name} onChange={(e) => update("name", e.target.value)} className={inputClass} /></div>
+        <div>
+          <label className={labelClass}>Collection / Occasion</label>
+          <select required value={form.occasion} onChange={(e) => update("occasion", e.target.value)} className={inputClass}>
+            <option value="" disabled>Select a collection</option>
+            {Object.values(collections).map(c => <option key={c.title} value={c.title}>{c.title}</option>)}
+          </select>
+        </div>
         <div className="md:col-span-2">
           <label className={labelClass}>Image</label>
           <div className="flex items-center gap-3">
