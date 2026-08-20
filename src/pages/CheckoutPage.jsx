@@ -9,8 +9,8 @@ import toast from "react-hot-toast";
 import { ShieldCheck, ArrowRight, Lock, UploadCloud, CheckCircle } from "lucide-react";
 
 // You can replace these with actual UPI details later
-const UPI_ID = "mcouture@upi";
-const QR_CODE_URL = "https://i.ibb.co/3vkb3tB/dummy-qr.png"; 
+const UPI_ID = "minkynarang5-2@okicici";
+const QR_CODE_URL = "/upi-qr.jpg"; 
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
