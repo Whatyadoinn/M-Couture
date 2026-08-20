@@ -6,7 +6,7 @@ import { useData } from "../context/DataContext";
 import { useCurrency } from "../context/CurrencyContext";
 import { sanitizeForm, isValidPhone, isValidEmail } from "../lib/security";
 import toast from "react-hot-toast";
-import { ShieldCheck, ArrowRight, Lock, UploadCloud, CheckCircle } from "lucide-react";
+import { ShieldCheck, ArrowRight, Lock, UploadCloud, CheckCircle, X } from "lucide-react";
 
 // You can replace these with actual UPI details later
 const UPI_ID = "minkynarang5-2@okicici";
@@ -32,6 +32,7 @@ export default function CheckoutPage() {
   });
   const [screenshot, setScreenshot] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showQRModal, setShowQRModal] = useState(false);
 
   useEffect(() => {
     if (items.length === 0) {
@@ -216,7 +217,16 @@ export default function CheckoutPage() {
               </p>
               
               <div className="flex flex-col items-center justify-center p-6 bg-ivory border border-charcoal/10 mb-6">
-                <img src={QR_CODE_URL} alt="UPI QR Code" className="w-48 h-48 mb-4 border border-charcoal/10 p-2 bg-white" />
+                <button 
+                  type="button" 
+                  onClick={() => setShowQRModal(true)} 
+                  className="relative group w-48 h-48 mb-4 border border-charcoal/10 p-2 bg-white rounded cursor-pointer overflow-hidden"
+                >
+                  <img src={QR_CODE_URL} alt="UPI QR Code" className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span className="text-white font-body text-xs tracking-widest uppercase bg-black/50 px-3 py-1 rounded">Click to expand</span>
+                  </div>
+                </button>
                 <p className="font-display text-lg text-charcoal">{UPI_ID}</p>
               </div>
 
@@ -302,6 +312,30 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+
+      {/* QR Code Modal Overlay */}
+      {showQRModal && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+          onClick={() => setShowQRModal(false)}
+        >
+          <div 
+            className="relative bg-white p-4 rounded-xl max-w-lg w-full flex flex-col items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button 
+              type="button"
+              className="absolute -top-12 right-0 text-white hover:text-gold transition-colors flex items-center gap-2"
+              onClick={() => setShowQRModal(false)}
+            >
+              <span className="font-body uppercase tracking-widest text-xs">Close</span>
+              <X size={24} />
+            </button>
+            <img src={QR_CODE_URL} alt="UPI QR Code Expanded" className="w-full h-auto object-contain rounded" />
+            <p className="mt-4 font-display text-xl text-charcoal">{UPI_ID}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
