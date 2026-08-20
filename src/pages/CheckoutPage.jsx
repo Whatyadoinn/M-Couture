@@ -4,17 +4,20 @@ import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { useData } from "../context/DataContext";
 import { useCurrency } from "../context/CurrencyContext";
-import { initiateRazorpayPayment } from "../lib/razorpay";
 import { sanitizeForm, isValidPhone, isValidEmail } from "../lib/security";
 import toast from "react-hot-toast";
-import { ShieldCheck, ArrowRight, Lock } from "lucide-react";
+import { ShieldCheck, ArrowRight, Lock, UploadCloud, CheckCircle } from "lucide-react";
+
+// You can replace these with actual UPI details later
+const UPI_ID = "mcouture@upi";
+const QR_CODE_URL = "https://i.ibb.co/3vkb3tB/dummy-qr.png"; 
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
   const { user } = useAuth();
-  const { addOrder } = useData();
+  const { addOrder, updateOrder } = useData();
   const { formatPrice } = useCurrency();
   const navigate = useNavigate();
 
@@ -27,6 +30,7 @@ export default function CheckoutPage() {
     state: "",
     pincode: "",
   });
+  const [screenshot, setScreenshot] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -38,9 +42,20 @@ export default function CheckoutPage() {
   const handleChange = (e) =>
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setScreenshot(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (items.length === 0) return;
+
+    if (!screenshot) {
+      toast.error("Please upload a payment screenshot.");
+      return;
+    }
 
     const cleanForm = sanitizeForm(form);
 
@@ -55,89 +70,49 @@ export default function CheckoutPage() {
 
     setLoading(true);
     try {
-      // Step 1: Create Razorpay order via backend
-      let razorpayOrderId = null;
-      try {
-        const orderRes = await fetch(`${API_URL}/api/create-order`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount: subtotal }),
-        });
-        if (orderRes.ok) {
-          const orderData = await orderRes.json();
-          razorpayOrderId = orderData.id;
-        } else {
-          const errData = await orderRes.json().catch(() => ({}));
-          throw new Error(errData.error || "Failed to create payment order. Please try again.");
-        }
-      } catch (backendErr) {
-        // Only swallow the error if it's a network/connectivity issue (backend unavailable → demo mode fallback)
-        if (backendErr.message.includes("fetch") || backendErr.name === "TypeError") {
-          console.warn("Backend unavailable, running in demo mode:", backendErr);
-        } else {
-          throw backendErr;
-        }
-      }
-
-      // Step 2: Launch Razorpay payment modal
-      const paymentResult = await initiateRazorpayPayment({
-        amount: subtotal * 100, // paise
-        razorpayOrderId,
-        customerName: cleanForm.name,
-        customerEmail: cleanForm.email,
-        customerPhone: cleanForm.phone,
-      });
-
-      // Step 3: Verify payment signature (skip in demo mode)
-      if (!paymentResult.demo && razorpayOrderId) {
-        const verifyRes = await fetch(`${API_URL}/api/verify-payment`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            razorpay_order_id: paymentResult.razorpay_order_id,
-            razorpay_payment_id: paymentResult.razorpay_payment_id,
-            razorpay_signature: paymentResult.razorpay_signature,
-          }),
-        });
-        const verifyData = await verifyRes.json();
-        if (!verifyData.verified) {
-          toast.error("Payment verification failed. Please contact support.");
-          setLoading(false);
-          return;
-        }
-      }
-
-      // Step 4: Save confirmed order to Firestore
+      // Step 1: Create Order in Firebase
       const orderRecord = {
         userId: user ? user.uid : "guest",
         items,
         totalAmount: subtotal,
         shippingAddress: cleanForm,
         status: "pending",
-        razorpayPaymentId: paymentResult.razorpay_payment_id,
-        razorpayOrderId: paymentResult.razorpay_order_id,
       };
 
       const firestoreId = await addOrder(orderRecord);
+
+      // Step 2: Upload Screenshot to Backend
+      const formData = new FormData();
+      formData.append("screenshot", screenshot);
+
+      const uploadRes = await fetch(`${API_URL}/api/orders/${firestoreId}/screenshot`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadRes.ok) {
+        throw new Error("Failed to upload screenshot. Please contact support.");
+      }
+
+      const uploadData = await uploadRes.json();
+      
+      // Step 3: Update Order with Screenshot URL in Firebase
+      await updateOrder(firestoreId, { paymentScreenshotUrl: uploadData.url });
 
       // Notify admin via backend email service
       fetch(`${API_URL}/api/notify-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ order: orderRecord }),
-      }).catch((e) => console.error("Email notification trigger failed:", e));
+        body: JSON.stringify({ order: { ...orderRecord, paymentScreenshotUrl: uploadData.url } }),
+      }).catch((err) => console.error("Email notification trigger failed:", err));
 
-      toast.success("Payment successful! Order confirmed.");
+      toast.success("Order submitted successfully!");
       clearCart();
       navigate(`/order-confirmation/${firestoreId}`, { replace: true });
 
     } catch (err) {
-      if (err.message === "Payment cancelled") {
-        toast.error("Payment was cancelled.");
-      } else {
-        console.error(err);
-        toast.error(err.message || "Failed to process order. Please try again.");
-      }
+      console.error(err);
+      toast.error(err.message || "Failed to process order. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -232,6 +207,39 @@ export default function CheckoutPage() {
                 />
               </div>
             </div>
+
+            {/* Payment Info */}
+            <div className="bg-white p-8 border border-charcoal/10">
+              <h2 className="font-body text-sm font-medium tracking-widest uppercase text-charcoal mb-6 border-b border-charcoal/10 pb-4">Payment</h2>
+              <p className="font-body text-sm text-charcoal/70 mb-4">
+                Please scan the QR code below or use our UPI ID to make the payment. Once done, upload a screenshot of your successful transaction.
+              </p>
+              
+              <div className="flex flex-col items-center justify-center p-6 bg-ivory border border-charcoal/10 mb-6">
+                <img src={QR_CODE_URL} alt="UPI QR Code" className="w-48 h-48 mb-4 border border-charcoal/10 p-2 bg-white" />
+                <p className="font-display text-lg text-charcoal">{UPI_ID}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-body text-charcoal mb-2">Upload Payment Screenshot <span className="text-red-500">*</span></label>
+                <label className={`flex w-full cursor-pointer appearance-none items-center justify-center rounded-md border-2 border-dashed p-6 transition-all ${screenshot ? "border-green-500 bg-green-50" : "border-gray-300 bg-white hover:border-gold hover:bg-ivory"}`}>
+                  <div className="flex flex-col items-center space-y-2">
+                    {screenshot ? (
+                      <>
+                        <CheckCircle className="text-green-500" size={24} />
+                        <span className="font-body text-sm text-green-700 font-medium">Selected: {screenshot.name}</span>
+                      </>
+                    ) : (
+                      <>
+                        <UploadCloud className="text-gray-400" size={24} />
+                        <span className="font-body text-sm text-gray-500">Click to upload screenshot</span>
+                      </>
+                    )}
+                  </div>
+                  <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                </label>
+              </div>
+            </div>
           </form>
         </div>
 
@@ -285,11 +293,11 @@ export default function CheckoutPage() {
               {loading ? (
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
               ) : (
-                <>Pay Now <ArrowRight size={14} /></>
+                <>Submit Order <ArrowRight size={14} /></>
               )}
             </button>
             <p className="font-body text-[10px] text-center text-charcoal/40 mt-4 flex items-center justify-center gap-1">
-              <ShieldCheck size={12} /> SSL Encrypted Checkout via Razorpay
+              <ShieldCheck size={12} /> Verification requires up to 24 hours
             </p>
           </div>
         </div>

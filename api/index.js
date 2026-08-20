@@ -1,15 +1,27 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const crypto = require("crypto");
-const Razorpay = require("razorpay");
 const nodemailer = require("nodemailer");
+const multer = require("multer");
+const { v2: cloudinary } = require("cloudinary");
 
 const app = express();
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
+// Cloudinary configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Multer: store uploads in memory for Cloudinary streaming
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype.startsWith("image/")) cb(null, true);
+    else cb(new Error("Only image files are allowed"), false);
+  },
 });
 
 app.use(cors());
@@ -52,42 +64,72 @@ async function sendNotificationEmail({ subject, text, html }) {
   }
 }
 
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
 app.get("/", (req, res) => {
   res.send("M'Couture backend is running");
 });
 
-// Create a Razorpay order (server-side — needed for signature verification)
-app.post("/api/create-order", async (req, res) => {
+// Upload payment screenshot for an order
+app.post("/api/orders/:id/screenshot", upload.single("screenshot"), async (req, res) => {
   try {
-    const { amount } = req.body;
-    if (!amount || amount <= 0) {
-      return res.status(400).json({ error: "Invalid amount" });
+    const { id } = req.params;
+    if (!req.file) {
+      return res.status(400).json({ error: "No image file provided" });
     }
-    const order = await razorpay.orders.create({
-      amount: Math.round(amount * 100), // paise
-      currency: "INR",
-      receipt: "mc_" + Date.now(),
+
+    // Upload buffer to Cloudinary
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: "mcouture/payment-screenshots", public_id: `order_${id}_${Date.now()}` },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      stream.end(req.file.buffer);
     });
-    res.json(order);
+
+    // Save to Prisma
+    try {
+      await prisma.order.update({
+        where: { id },
+        data: { paymentScreenshotUrl: result.secure_url },
+      });
+    } catch (dbError) {
+      console.warn("Could not update Prisma order (might not exist yet):", dbError.message);
+    }
+
+    res.json({ success: true, url: result.secure_url });
   } catch (err) {
-    console.error("Create order error:", err);
+    console.error("Screenshot upload error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// Verify Razorpay payment signature
-app.post("/api/verify-payment", (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+// Admin: verify (confirm/reject) an order
+app.patch("/api/orders/:id/verify", async (req, res) => {
+  try {
+    const { status } = req.body;
+    if (!["confirmed", "rejected"].includes(status)) {
+      return res.status(400).json({ error: "Status must be 'confirmed' or 'rejected'" });
+    }
+    
+    // Save to Prisma
+    try {
+      await prisma.order.update({
+        where: { id: req.params.id },
+        data: { status },
+      });
+    } catch (dbError) {
+      console.warn("Could not update Prisma order:", dbError.message);
+    }
 
-  const generatedSignature = crypto
-    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-    .update(razorpay_order_id + "|" + razorpay_payment_id)
-    .digest("hex");
-
-  if (generatedSignature === razorpay_signature) {
-    res.json({ verified: true });
-  } else {
-    res.status(400).json({ verified: false, error: "Signature mismatch" });
+    res.json({ success: true, orderId: req.params.id, status });
+  } catch (err) {
+    console.error("Order verify error:", err);
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -118,7 +160,7 @@ app.post("/api/notify-order", async (req, res) => {
       `Address: ${order.shippingAddress.address}, ${order.shippingAddress.city}, ${order.shippingAddress.state} - ${order.shippingAddress.pincode}\n\n` +
       `Items:\n${itemsList}\n\n` +
       `Total Amount: ₹${order.totalAmount.toLocaleString("en-IN")}\n` +
-      `Razorpay Payment ID: ${order.razorpayPaymentId || "Demo Payment"}`;
+      `Payment: UPI (screenshot uploaded)`;
 
     const html = `
       <h3>New Order Placed!</h3>
@@ -132,7 +174,7 @@ app.post("/api/notify-order", async (req, res) => {
       <p><strong>Items Ordered:</strong></p>
       <ul>${htmlItemsList}</ul>
       <p><strong>Total Amount:</strong> ₹${order.totalAmount.toLocaleString("en-IN")}</p>
-      <p><strong>Razorpay Payment ID:</strong> ${order.razorpayPaymentId || "Demo Payment"}</p>
+      <p><strong>Payment:</strong> UPI (screenshot uploaded — please verify in admin dashboard)</p>
     `;
 
     const result = await sendNotificationEmail({ subject, text, html });

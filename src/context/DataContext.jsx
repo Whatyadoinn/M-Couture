@@ -177,6 +177,10 @@ export function DataProvider({ children }) {
     return ref.id;
   }, []);
 
+  const updateOrder = useCallback(async (orderId, updates) => {
+    await updateDoc(doc(db, "orders", orderId), updates);
+  }, []);
+
   const updateOrderStatus = useCallback(async (orderId, status) => {
     await updateDoc(doc(db, "orders", orderId), { status });
   }, []);
@@ -275,7 +279,7 @@ export function DataProvider({ children }) {
     loaded,
     addProduct, updateProduct, deleteProduct, toggleFeatured,
     updateCollection, addCollection, deleteCollection,
-    addOrder, updateOrderStatus, deleteOrder,
+    addOrder, updateOrder, updateOrderStatus, deleteOrder,
     addExhibition, updateExhibition, deleteExhibition,
     addBestsellerItem, updateBestsellerItem, deleteBestsellerItem,
     addClientItem, updateClientItem, deleteClientItem,

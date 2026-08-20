@@ -29,13 +29,19 @@ model Product {
   orderItems OrderItem[]
 }
 
+enum OrderStatus {
+  pending
+  confirmed
+  rejected
+}
+
 model Order {
-  id              String   @id @default(uuid())
-  customerName    String
-  email           String
-  status          String   @default("pending")
-  razorpayOrderId String?
-  createdAt       DateTime @default(now())
+  id                   String      @id @default(uuid())
+  customerName         String
+  email                String
+  status               OrderStatus @default(pending)
+  paymentScreenshotUrl String?
+  createdAt            DateTime    @default(now())
 
   items OrderItem[]
 }

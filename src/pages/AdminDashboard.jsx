@@ -445,6 +445,24 @@ function CollectionForm({ slug: existingSlug, data, onSave, onCancel }) {
 function OrdersTab() {
   const { orders, updateOrderStatus, deleteOrder } = useData();
   const [filter, setFilter] = useState("all");
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
+
+  const handleVerify = async (orderId, status) => {
+    try {
+      const res = await fetch(`${API_URL}/api/orders/${orderId}/verify`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
+      });
+      if (!res.ok) throw new Error("Failed to verify order on backend");
+      
+      // Update local Firebase data
+      await updateOrderStatus(orderId, status);
+      toast.success(`Order ${status}`);
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
 
   const filtered = filter === "all" ? orders : orders.filter((o) => o.status === filter);
 
@@ -498,17 +516,26 @@ function OrdersTab() {
                   <span className={`px-2.5 py-1 rounded-full text-xs font-body font-medium capitalize ${statusColors[o.status] || "bg-gray-100 text-gray-800"}`}>
                     {o.status}
                   </span>
-                  <select
-                    value={o.status}
-                    onChange={(e) => { updateOrderStatus(o.id, e.target.value); toast.success("Status updated"); }}
-                    className="text-xs border border-gray-300 rounded-lg px-2 py-1.5 font-body focus:outline-none focus:ring-1 focus:ring-gold"
-                  >
-                    <option value="pending">Pending</option>
-                    <option value="processing">Processing</option>
-                    <option value="shipped">Shipped</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="cancelled">Cancelled</option>
-                  </select>
+                  {o.status === "pending" ? (
+                    <div className="flex gap-2">
+                      <button onClick={() => handleVerify(o.id, "confirmed")} className="bg-green-600 text-white px-3 py-1 rounded text-xs font-body hover:bg-green-700">Confirm</button>
+                      <button onClick={() => handleVerify(o.id, "rejected")} className="bg-red-600 text-white px-3 py-1 rounded text-xs font-body hover:bg-red-700">Reject</button>
+                    </div>
+                  ) : (
+                    <select
+                      value={o.status}
+                      onChange={(e) => { updateOrderStatus(o.id, e.target.value); toast.success("Status updated"); }}
+                      className="text-xs border border-gray-300 rounded-lg px-2 py-1.5 font-body focus:outline-none focus:ring-1 focus:ring-gold"
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="confirmed">Confirmed</option>
+                      <option value="processing">Processing</option>
+                      <option value="shipped">Shipped</option>
+                      <option value="delivered">Delivered</option>
+                      <option value="cancelled">Cancelled</option>
+                      <option value="rejected">Rejected</option>
+                    </select>
+                  )}
                   <button onClick={() => { if (confirm("Delete?")) { deleteOrder(o.id); } }} className={btnDanger}><Trash2 size={14} /></button>
                 </div>
               </div>
@@ -526,6 +553,14 @@ function OrdersTab() {
                     <p className="text-xs text-gray-600 font-body">{o.shippingAddress?.address}</p>
                     <p className="text-xs text-gray-600 font-body">{o.shippingAddress?.city}, {o.shippingAddress?.state} {o.shippingAddress?.pincode}</p>
                   </div>
+                  {o.paymentScreenshotUrl && (
+                    <div>
+                      <p className="text-[11px] text-gray-400 font-body uppercase">Payment Screenshot</p>
+                      <a href={o.paymentScreenshotUrl} target="_blank" rel="noreferrer">
+                        <img src={o.paymentScreenshotUrl} alt="Payment Screenshot" className="h-16 w-16 object-cover border rounded hover:opacity-80 transition" />
+                      </a>
+                    </div>
+                  )}
                 </div>
                 <div className="border-t border-gray-100 pt-3 space-y-2">
                   {o.items?.map((item, idx) => (
